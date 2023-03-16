@@ -2,7 +2,7 @@
 
 const importLocal = require('import-local')
 const entry = require('../lib/index')
-const log = require('npmlog')
+const {log} = require('@learnmyself.com/utils')
 
 
 if (importLocal(__filename)) {

@@ -1,11 +1,11 @@
 const commander = require('commander')
 const createCommandInit = require('@learnmyself.com/init')
-
 const pkg = require('../package.json')
-
+const {log} = require('@learnmyself.com/utils')
 const {program} =commander
 
 module.exports = function (arg) {
+  log.success(1111111)
   program
     .name(Object.keys(pkg.bin)[0])
     .usage('<command> [options]')
@@ -20,6 +20,6 @@ module.exports = function (arg) {
   //     console.log(name,opts);
   //   })
   createCommandInit(program)
-  
+
   program.parse(process.argv)
 }
