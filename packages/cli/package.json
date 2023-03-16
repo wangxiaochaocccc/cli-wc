@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "lib/index.js",
   "bin":{
-    "wc":"bin/cli.js"
+    "wc-cli":"bin/cli.js"
   },
   "directories": {
     "lib": "lib",
