@@ -6,8 +6,8 @@
   "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
   "license": "ISC",
   "main": "lib/index.js",
-  "bin":{
-    "wc-cli":"bin/cli.js"
+  "bin": {
+    "wc-cli": "bin/cli.js"
   },
   "directories": {
     "lib": "lib",
@@ -29,5 +29,9 @@
   },
   "bugs": {
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
+  },
+  "dependencies": {
+    "import-local": "^3.1.0",
+    "npmlog": "^7.0.1"
   }
 }
