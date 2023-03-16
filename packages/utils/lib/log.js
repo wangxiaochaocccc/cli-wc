@@ -1,7 +1,7 @@
 const log = require('npmlog')
-
+const isDebug = require('./isDebug')
 // debug模式
-if (process.argv.includes('--debug') || process.argv.includes('-d')) {
+if (isDebug()) {
   log.level = 'verbose'
 } else {
   log.level = 'info'
