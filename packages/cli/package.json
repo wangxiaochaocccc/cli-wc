@@ -31,6 +31,7 @@
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
   },
   "dependencies": {
+    "commander": "^10.0.0",
     "import-local": "^3.1.0",
     "npmlog": "^7.0.1"
   }

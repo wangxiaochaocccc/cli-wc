@@ -1,3 +1,14 @@
+const commander = require('commander')
+const pkg = require('../package.json')
+
+const {program} =commander
+
 module.exports = function (arg) {
-  console.log(1111,arg);
+  program
+    .name(Object.keys(pkg.bin)[0])
+    .usage('<command> [options]')
+    .version(pkg.version)
+    .option('-d,--debug', '是否开启调试模式', false)
+  
+  program.parse(process.argv)
 }
