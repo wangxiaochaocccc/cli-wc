@@ -9,12 +9,6 @@ class initCommand extends Command {
   }
   action ([name,opts]) {
     console.log('init', name, opts);
-    new Promise((resolve) => {
-      resolve()
-    }).then(() => {
-      throw new Error('错误了')
-    })
-    throw new Error('都错了')
   }
   get options () {
     return [
