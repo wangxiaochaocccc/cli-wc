@@ -8,7 +8,13 @@ class initCommand extends Command {
     return 'init project'
   }
   action ([name,opts]) {
-    console.log('init',name,opts);
+    console.log('init', name, opts);
+    new Promise((resolve) => {
+      resolve()
+    }).then(() => {
+      throw new Error('错误了')
+    })
+    throw new Error('都错了')
   }
   get options () {
     return [
