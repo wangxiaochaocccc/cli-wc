@@ -1,4 +1,4 @@
-import { log,makeList } from "@learnmyself.com/utils"
+import { log,makeList,makeInput } from "@learnmyself.com/utils"
 
 const ADD_TYPE_PROJECT = 'project'
 const ADD_TYPE_PAGE = 'page'
@@ -35,9 +35,18 @@ function getType () {
   })
 }
 
+// 获取项目类型
+function getName () {
+  return makeInput({
+    message: '请输入项目名称：',
+    default:''
+  })
+}
 
 export default async function createTemplate (name, opts) {
   // 获取创建类型
   const addType = await getType()
-  log.verbose('addType',addType)
+  log.verbose('addType', addType)
+  const addName = await getName()
+  log.verbose('addName',addName)
 }

@@ -29,6 +29,12 @@ function make ({
   return inquirer.prompt(options).then(answers => answers.name)
 }
 
-export default function makeList(params){
+export function makeList(params){
   return make({...params})
+}
+export function makeInput (params) {
+  return make({
+    type: 'input',
+    ...params
+  })
 }
