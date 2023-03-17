@@ -42,11 +42,23 @@ function getName () {
     default:''
   })
 }
+// 获取项目模板
+function getTemplate () {
+  return makeList({
+    choices: ADD_TEMPLATE,
+    message: '请选择项目模板'
+  })
+}
 
 export default async function createTemplate (name, opts) {
   // 获取创建类型
   const addType = await getType()
   log.verbose('addType', addType)
-  const addName = await getName()
-  log.verbose('addName',addName)
+  if (addType === ADD_TYPE_PROJECT) {
+    const addName = await getName()
+    log.verbose('addName', addName)
+    const addTemplate = await getTemplate()
+    const selectedTemplate = ADD_TEMPLATE.find(_=>_.name===addTemplate)
+    log.verbose('addTemplate', selectedTemplate)
+  }
 }
