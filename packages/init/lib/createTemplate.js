@@ -1,4 +1,5 @@
-import {homedir} from 'node:os'
+import { homedir } from 'node:os'
+import path from 'node:path'
 import { log, makeList, makeInput, getNpmLatestVersion } from "@learnmyself.com/utils"
 
 const ADD_TYPE_PROJECT = 'project'
