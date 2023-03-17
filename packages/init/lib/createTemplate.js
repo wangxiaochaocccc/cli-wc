@@ -1,4 +1,4 @@
-import { log,makeList,makeInput } from "@learnmyself.com/utils"
+import { log,makeList,makeInput,getNpmLatestVersion } from "@learnmyself.com/utils"
 
 const ADD_TYPE_PROJECT = 'project'
 const ADD_TYPE_PAGE = 'page'
@@ -60,5 +60,8 @@ export default async function createTemplate (name, opts) {
     const addTemplate = await getTemplate()
     const selectedTemplate = ADD_TEMPLATE.find(_=>_.name===addTemplate)
     log.verbose('addTemplate', selectedTemplate)
+    // 获取最新版本号
+    const latestVersion = await getNpmLatestVersion(selectedTemplate.npmName)
+    log.verbose('latestVersion',latestVersion)
   }
 }
