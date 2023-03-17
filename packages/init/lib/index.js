@@ -1,4 +1,6 @@
 import Command from "@learnmyself.com/command"
+import { log } from "@learnmyself.com/utils"
+import createTemplate from './createTemplate.js'
 
 class initCommand extends Command {
   get command () {
@@ -8,19 +10,17 @@ class initCommand extends Command {
     return 'init project'
   }
   action ([name,opts]) {
-    console.log('init', name, opts);
+    log.verbose('init', name, opts);
+    //创建项目模版
+    createTemplate(name,opts)
   }
   get options () {
     return [
       ['-f', '是否强制更新', false]
     ]
   }
-  preAction () {
-    console.log('preAction');
-  }
-  postAction () {
-    console.log('postAction');
-  }
+  preAction () {}
+  postAction () {}
 }
 
 function Init (instance) {
