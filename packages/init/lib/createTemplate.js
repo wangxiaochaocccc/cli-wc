@@ -1,8 +1,9 @@
-import { log,makeList,makeInput,getNpmLatestVersion } from "@learnmyself.com/utils"
+import {homedir} from 'node:os'
+import { log, makeList, makeInput, getNpmLatestVersion } from "@learnmyself.com/utils"
 
 const ADD_TYPE_PROJECT = 'project'
 const ADD_TYPE_PAGE = 'page'
-
+const TEMP_DIR='.wc-cli'
 const ADD_TEMPLATE = [
   {
     name: 'Vue3项目模版',
@@ -49,6 +50,9 @@ function getTemplate () {
     message: '请选择项目模板'
   })
 }
+function getTargetPath () {
+  return path.resolve(`${homedir()}/${TEMP_DIR}`,'addTemplate')
+}
 
 export default async function createTemplate (name, opts) {
   // 获取创建类型
@@ -62,6 +66,17 @@ export default async function createTemplate (name, opts) {
     log.verbose('addTemplate', selectedTemplate)
     // 获取最新版本号
     const latestVersion = await getNpmLatestVersion(selectedTemplate.npmName)
-    log.verbose('latestVersion',latestVersion)
+    log.verbose('latestVersion', latestVersion)
+    // 获取缓存路径
+    const targetPath = getTargetPath()
+    
+    // 返回
+    return {
+      template: selectedTemplate,
+      name: addName,
+      tyep: addType,
+      version:latestVersion,
+      targetPath
+    }
   }
 }
