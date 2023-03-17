@@ -1,4 +1,4 @@
-const Command = require("@learnmyself.com/command")
+import Command from "@learnmyself.com/command"
 
 class initCommand extends Command {
   get command () {
@@ -27,4 +27,4 @@ function Init (instance) {
   return new initCommand(instance)
 }
 
-module.exports = Init
+export default Init

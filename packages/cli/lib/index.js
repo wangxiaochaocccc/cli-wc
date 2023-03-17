@@ -1,12 +1,17 @@
-const commander = require('commander')
-const createCommandInit = require('@learnmyself.com/init')
-const pkg = require('../package.json')
-const {log,checkNodeVersion,isDebug} = require('@learnmyself.com/utils')
-const {program} =commander
+import path from 'path'
+import { program } from 'commander'
+import  createCommandInit from '@learnmyself.com/init'
+import  {log,checkNodeVersion,isDebug} from '@learnmyself.com/utils'
+import { dirname } from 'dirname-filename-esm'
+import fse from 'fs-extra'
 
+// 读取package.json
+const __dirname = dirname(import.meta)
+const pkgPath = path.resolve(__dirname, '../package.json')
+const pkg = fse.readJSONSync(pkgPath)
 
 // 检查node版本
-const NODE_VERSION_NEEDMIN = '17.0.0'
+const NODE_VERSION_NEEDMIN = '14.0.0'
 function preAction () {
   checkNodeVersion(NODE_VERSION_NEEDMIN)
 }
@@ -20,7 +25,7 @@ process.on('uncaughtException', (e) => {
   }
 })
 
-module.exports = function (arg) {
+export default function (arg) {
   log.verbose('11111')
   program
     .name(Object.keys(pkg.bin)[0])

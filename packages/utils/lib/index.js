@@ -1,9 +1,9 @@
-const log = require('./log')
-const isDebug = require('./isDebug')
-const checkNodeVersion = require('./checkNodeVersion')
+import  log from './log.js'
+import  isDebug from './isDebug.js'
+import  checkNodeVersion from './checkNodeVersion.js'
 
 
-module.exports = {
+export {
   log,
   isDebug,
   checkNodeVersion

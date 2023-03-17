@@ -27,7 +27,9 @@
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
   },
   "dependencies": {
+    "chalk": "^5.2.0",
     "npmlog": "^7.0.1",
     "semver": "^7.3.8"
-  }
+  },
+  "type":"module"
 }

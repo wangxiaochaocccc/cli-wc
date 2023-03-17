@@ -41,4 +41,4 @@ class Command {
   preAction(){}
 }
 
-module.exports=Command
+export default Command

@@ -25,5 +25,6 @@
   },
   "bugs": {
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
-  }
+  },
+  "type":"module"
 }

@@ -28,5 +28,6 @@
   },
   "dependencies": {
     "@learnmyself.com/command": "^0.0.0"
-  }
+  },
+  "type":"module"
 }
