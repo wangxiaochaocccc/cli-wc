@@ -9,12 +9,12 @@ const ADD_TEMPLATE = [
   {
     name: 'Vue3项目模版',
     npmName: '@learnmyself.com/template-vue3',
-    version:'1.0.0'
+    version:'1.0.1'
   },
   {
     name: 'React18项目模版',
     npmName: '@learnmyself.com/template-react18',
-    version:'1.0.0'
+    version:'1.0.1'
   }
 ]
 const ADD_TYPE = [

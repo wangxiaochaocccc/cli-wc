@@ -17,8 +17,8 @@ function getCacheDir(targetPath){
   return path.resolve(targetPath,'node_modules')
 }
 // 下载模板
-async function downloadAddTemplate (template, targetPath) {
-  const { npmName,version } = template
+async function downloadAddTemplate (template, targetPath,version) {
+  const { npmName } = template
   const installCommand = 'npm'
   const installArgs = ['install', `${npmName}@${version}`]
   const cwd = targetPath
@@ -29,11 +29,11 @@ async function downloadAddTemplate (template, targetPath) {
 
 // 下载模板到缓存目录
 export default async function downloadTemplate (selectedTemplate) {
-  const { template, targetPath } = selectedTemplate
+  const { template, targetPath,version } = selectedTemplate
   makeCacheDir(targetPath)
   const spinner = ora('正在下载模板...').start()
   try {
-      await downloadAddTemplate(template,targetPath)
+      await downloadAddTemplate(template,targetPath,version)
       spinner.stop()
   } catch (e) {
     spinner.stop()
