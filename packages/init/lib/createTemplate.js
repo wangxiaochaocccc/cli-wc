@@ -41,7 +41,13 @@ function getType () {
 function getName () {
   return makeInput({
     message: '请输入项目名称：',
-    default:''
+    default: '',
+    validate (val) {
+      if (val.length) {
+        return true
+      }
+      return '项目名称必填'
+    }
   })
 }
 // 获取项目模板
