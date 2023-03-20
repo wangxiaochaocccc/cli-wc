@@ -1,24 +1,10 @@
 import { homedir } from 'node:os'
 import path from 'node:path'
-import { log, makeList, makeInput, getNpmLatestVersion } from "@learnmyself.com/utils"
+import { log, makeList, makeInput, getNpmLatestVersion,request,printLog } from "@learnmyself.com/utils"
 
 const ADD_TYPE_PROJECT = 'project'
 const ADD_TYPE_PAGE = 'page'
 const TEMP_DIR='.wc-cli'
-const ADD_TEMPLATE = [
-  {
-    name: 'Vue3项目模版',
-    npmName: '@learnmyself.com/template-vue3',
-    value:'template-vue3',
-    version:'1.0.1'
-  },
-  {
-    name: 'React18项目模版',
-    npmName: '@learnmyself.com/template-react18',
-    value:'template-react18',
-    version:'1.0.1'
-  }
-]
 const ADD_TYPE = [
   {
     name: '项目',
@@ -53,7 +39,7 @@ function getName () {
   })
 }
 // 获取项目模板
-function getTemplate () {
+function getTemplate (ADD_TEMPLATE) {
   return makeList({
     choices: ADD_TEMPLATE,
     message: '请选择项目模板'
@@ -62,8 +48,26 @@ function getTemplate () {
 function getTargetPath () {
   return path.resolve(`${homedir()}/${TEMP_DIR}`,'addTemplate')
 }
+// 获取项目模板数据
+async function getTemplateData () {
+  try {
+    const data = await request({
+      url: '/project/template',
+      method:'get'
+    })
+    return data
+  } catch (e) {
+    printLog(e)
+    return null;
+  }
+}
 
 export default async function createTemplate (name, opts) {
+  const ADD_TEMPLATE = await getTemplateData()
+  if (!ADD_TEMPLATE) {
+    throw new Error('项目模板不存在')
+  }
+
   const { type = null, template = null } = opts
   let addType
   let addName
@@ -91,7 +95,7 @@ export default async function createTemplate (name, opts) {
         throw new Error(`项目模板${template}不存在`)
       }
     } else {
-      const addTemplate = await getTemplate()
+      const addTemplate = await getTemplate(ADD_TEMPLATE)
       selectedTemplate = ADD_TEMPLATE.find(_=>_.value===addTemplate)
     }
     log.verbose('addTemplate', selectedTemplate)

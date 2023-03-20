@@ -3,7 +3,9 @@ import  isDebug from './isDebug.js'
 import  checkNodeVersion from './checkNodeVersion.js'
 import {makeList,makeInput} from './inquirer.js'
 import { getNpmLatestVersion } from './npm.js'
-import {printLog} from './printLog.js'
+import { printLog } from './printLog.js'
+import request from './request.js'
+
 export {
   log,
   isDebug,
@@ -11,5 +13,6 @@ export {
   makeList,
   makeInput,
   getNpmLatestVersion,
-  printLog
+  printLog,
+  request
 }
