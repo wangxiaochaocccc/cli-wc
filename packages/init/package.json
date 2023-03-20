@@ -30,6 +30,7 @@
     "@learnmyself.com/command": "^0.0.0",
     "@learnmyself.com/utils": "^0.0.0",
     "fs-extra": "^11.1.0",
+    "ora": "^6.2.0",
     "path-exists": "^5.0.0"
   },
   "type": "module"
