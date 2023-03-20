@@ -27,7 +27,7 @@ async function downloadAddTemplate (template, targetPath) {
   await execa(installCommand,installArgs,{cwd})
 }
 
-// 下载模板整体
+// 下载模板到缓存目录
 export default async function downloadTemplate (selectedTemplate) {
   const { template, targetPath } = selectedTemplate
   makeCacheDir(targetPath)
@@ -35,7 +35,6 @@ export default async function downloadTemplate (selectedTemplate) {
   try {
       await downloadAddTemplate(template,targetPath)
       spinner.stop()
-      log.success('模板下载成功')
   } catch (e) {
     spinner.stop()
     printLog(e)
