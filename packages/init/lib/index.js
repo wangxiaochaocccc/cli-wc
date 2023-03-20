@@ -22,7 +22,9 @@ class initCommand extends Command {
   }
   get options () {
     return [
-      ['--force', '是否强制更新', false]
+      ['-f,--force', '是否强制更新', false],
+      ['-t,--type <type>', '项目类型(project/page)'],
+      ['-tp,--template <templat>', '项目模板'],
     ]
   }
   preAction () {}
