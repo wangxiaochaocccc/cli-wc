@@ -26,22 +26,25 @@ function copyFile (template,targetPath,finalDir) {
   log.success('拷贝成功')
 }
 
-async function ejsRender (finalDir) {
+async function ejsRender (finalDir, template, name) {
+  const ejsData = {
+    data: {
+      name
+    }
+  }
+  const { ignore } = template
+  log.verbose('ejsRender',ignore,ejsData)
   await glob('**', {
     cwd: finalDir,
     nodir: true,
     ignore: [
-      '**/public/**',
+     ...ignore,
       '**/node_modules/**',
     ]
   }).then(fileList => {
     fileList.forEach(file => {
       const filePath = path.join(finalDir, file)
-      ejs.renderFile(filePath, {
-        data: {
-          name:'vue-template1'
-        }
-      }, (err,result) => {
+      ejs.renderFile(filePath, ejsData, (err,result) => {
         if (!err) {
           fse.writeFileSync(filePath,result)
         } else {
@@ -71,5 +74,5 @@ export default function installTemplate (selectedTemplate, opts) {
   }
   copyFile(template, targetPath, finalDir)
   // ejs渲染
-  ejsRender(finalDir)
+  ejsRender(finalDir,template,name)
 }
