@@ -50,9 +50,18 @@ function getTargetPath () {
 }
 // 获取项目模板数据
 async function getTemplateData () {
+  // 测试restful API
+  // const a = await request({
+  //   url: '/v1/project/123',
+  //   method: 'delete',
+  //   data: {
+  //     a:1
+  //   }
+  // })
+  // console.log(a);
   try {
     const data = await request({
-      url: '/project/template',
+      url: '/v1/project/',
       method:'get'
     })
     return data
