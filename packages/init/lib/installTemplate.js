@@ -4,11 +4,15 @@ import ora from 'ora'
 import ejs from 'ejs'
 import {glob} from 'glob'
 import { pathExistsSync } from 'path-exists'
-import { log } from '@learnmyself.com/utils'
+import { log,makeList } from '@learnmyself.com/utils'
 
-// 获取源文件文职
+// 获取源文件位置
 function getoriginFileDir (template,targetPath) {
   return path.resolve(targetPath,'node_modules',template.npmName,'template')
+}
+// 获取plugin位置
+function getPluginFileDir (template, targetPath) {
+  return path.resolve(targetPath,'node_modules',template.npmName,'plugins/index.js')
 }
 
 // 复制文件
@@ -25,15 +29,33 @@ function copyFile (template,targetPath,finalDir) {
   spinner.stop()
   log.success('拷贝成功')
 }
-
-async function ejsRender (finalDir, template, name) {
+// 执行插件
+async function exePlugins (targetPath, template) {
+  const pluginPath = getPluginFileDir(targetPath, template)
+  let data = {}
+  let api = {
+    makeList
+  }
+  if (pathExistsSync(pluginPath)) {
+    const pluginFun = (await import(pluginPath)).default
+    data = await pluginFun(api)
+  }
+  return data
+}
+// ejs渲染
+async function ejsRender (targetPath, finalDir, template, name) {
+   // 执行插件
+  const data = await exePlugins(template, targetPath)
+  
   const ejsData = {
     data: {
-      name
+      name,
+      ...data
     }
   }
   const { ignore } = template
-  log.verbose('ejsRender',ignore,ejsData)
+  log.verbose('ejsRender', ignore, ejsData)
+ 
   await glob('**', {
     cwd: finalDir,
     nodir: true,
@@ -55,7 +77,7 @@ async function ejsRender (finalDir, template, name) {
   })
 }
 
-export default function installTemplate (selectedTemplate, opts) {
+export default async function installTemplate (selectedTemplate, opts) {
   const { name, targetPath,template } = selectedTemplate
   const { force = false } = opts
   const rootDir = process.cwd()
@@ -72,7 +94,7 @@ export default function installTemplate (selectedTemplate, opts) {
   } else {
     fse.ensureDirSync(finalDir)
   }
-  copyFile(template, targetPath, finalDir)
+  await copyFile(template, targetPath, finalDir)
   // ejs渲染
-  ejsRender(finalDir,template,name)
+  await ejsRender(targetPath,finalDir,template,name)
 }
