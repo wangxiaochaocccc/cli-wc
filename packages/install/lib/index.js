@@ -1,5 +1,5 @@
 import Command from '@learnmyself.com/command'
-
+import {github} from '@learnmyself.com/utils'
 
 class initCommand extends Command {
   get command () {
@@ -8,8 +8,8 @@ class initCommand extends Command {
   get description () {
     return 'install project'
   }
-  async action (params) {
-    console.log(params);
+  async action () {
+    const githubApi = new github()
   }
   get options () {}
 }
