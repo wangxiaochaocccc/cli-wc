@@ -9,10 +9,10 @@ class initCommand extends Command {
     return 'install project'
   }
   async action () {
-    const platform = getPlatform()
+    let platform = getPlatform()
     if (!platform) {
       // 选择git平台
-      await makeList({
+      platform=await makeList({
         choices: [
           {name:'GitHub',value:'github'},
           {name:'Gitee',value:'gitee'},
@@ -27,8 +27,17 @@ class initCommand extends Command {
       githubApi = new github()
     } else {
     }
-    githubApi.savePlatformPath(platform)
-    githubApi.init()
+    await githubApi.init()
+    await githubApi.savePlatformPath(platform)
+    // 搜索respositories
+    const searchResult = await githubApi.search({
+      q: 'vue',
+      sort: 'stars',
+      order: 'desc',
+      per_page: 2,
+      page:1
+    })
+    console.log(searchResult,111);
   }
   get options () {}
 }
