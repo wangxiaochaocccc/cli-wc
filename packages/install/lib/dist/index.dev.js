@@ -76,7 +76,9 @@ function (_Command) {
 
               if (platform === 'github') {
                 githubApi = new _utils.github();
-              } else {}
+              } else {
+                githubApi = new _utils.gitee();
+              }
 
               _context.next = 9;
               return regeneratorRuntime.awrap(githubApi.init());
@@ -88,8 +90,8 @@ function (_Command) {
             case 11:
               _context.next = 13;
               return regeneratorRuntime.awrap(githubApi.search({
-                q: 'vue',
-                sort: 'stars',
+                q: 'JavaScript',
+                sort: 'stars_count',
                 order: 'desc',
                 per_page: 2,
                 page: 1
@@ -97,7 +99,7 @@ function (_Command) {
 
             case 13:
               searchResult = _context.sent;
-              console.log(searchResult, 111);
+              console.log(searchResult, 11122);
 
             case 15:
             case "end":

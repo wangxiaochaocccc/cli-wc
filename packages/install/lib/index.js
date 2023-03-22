@@ -1,5 +1,5 @@
 import Command from '@learnmyself.com/command'
-import {github, log,makeList,getPlatform} from '@learnmyself.com/utils'
+import {github,gitee, log,makeList,getPlatform} from '@learnmyself.com/utils'
 
 class initCommand extends Command {
   get command () {
@@ -26,18 +26,19 @@ class initCommand extends Command {
     if (platform === 'github') {
       githubApi = new github()
     } else {
+      githubApi = new gitee()
     }
     await githubApi.init()
     await githubApi.savePlatformPath(platform)
     // 搜索respositories
     const searchResult = await githubApi.search({
-      q: 'vue',
-      sort: 'stars',
+      q: 'JavaScript',
+      sort: 'stars_count',
       order: 'desc',
       per_page: 2,
       page:1
     })
-    console.log(searchResult,111);
+    console.log(searchResult,11122);
   }
   get options () {}
 }
