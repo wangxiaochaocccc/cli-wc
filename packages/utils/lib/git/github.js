@@ -1,4 +1,4 @@
-import gitServer from './gitServer.js';
+import {gitServer} from './gitServer.js';
 
 class github extends gitServer {
   constructor() {

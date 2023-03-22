@@ -6,6 +6,7 @@ import { getNpmLatestVersion } from './npm.js'
 import { printLog } from './printLog.js'
 import request from './request.js'
 import github from './git/github.js'
+import { getPlatform } from './git/gitServer.js'
 
 export {
   log,
@@ -17,5 +18,6 @@ export {
   getNpmLatestVersion,
   printLog,
   request,
-  github
+  github,
+  getPlatform
 }
