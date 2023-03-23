@@ -1,5 +1,5 @@
 import Command from '@learnmyself.com/command'
-import {github,gitee, log,makeList,getPlatform} from '@learnmyself.com/utils'
+import {github,gitee, log,makeList,getPlatform,makeInput} from '@learnmyself.com/utils'
 
 class initCommand extends Command {
   get command () {
@@ -8,7 +8,15 @@ class initCommand extends Command {
   get description () {
     return 'install project'
   }
+  get options () { }
+
   async action () {
+    await this.generateGitAPI()
+    await this.searchGit()
+  }
+  
+  // 选择平台和配置tioken逻辑
+  async generateGitAPI () {
     let platform = getPlatform()
     if (!platform) {
       // 选择git平台
@@ -30,18 +38,53 @@ class initCommand extends Command {
     }
     await githubApi.init()
     await githubApi.savePlatformPath(platform)
-    // 搜索respositories
-    const searchResult = await githubApi.search({
-      q: 'JavaScript',
-      sort: 'stars_count',
-      order: 'desc',
-      per_page: 2,
-      page:1
+    this.gitApi = githubApi
+    this.platform = platform
+  }
+  // 搜索逻辑
+  async searchGit () {
+    // 搜索的参数
+    const q = await makeInput({
+      message: '请输入搜索的内容',
+      validate (val) {
+        if (val.length) {
+          return true
+        }
+        return '请输入搜索的内容'
+      }
     })
+    log.verbose('q参数', q)
+    // 搜索的language
+    const language = await makeInput({
+      message: '请输入搜索的语言',
+      validate (val) {
+        if (val.length) {
+          return true
+        }
+        return '请输入搜索的语言'
+      }
+    })
+    log.verbose('language', language)
+    // 搜索的参数
+    let params
+    this.page = 1
+    // 判断平台
+    if (this.platform === 'github') {
+      params = {
+        q: q + (language ? `+language:${language}` : ''),
+        page: this.page,
+        per_page: 10,
+        sort: 'stars_count',
+        order: 'desc',
+      }
+    }
+    log.verbose('params',params)
+    // 搜索respositories
+    const searchResult = await this.gitApi.search(params)
     console.log(searchResult,11122);
   }
-  get options () {}
 }
+
 
 function InstallCommand (instance) {
   return new initCommand(instance)
