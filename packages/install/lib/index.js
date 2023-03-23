@@ -1,6 +1,8 @@
 import Command from '@learnmyself.com/command'
 import {github,gitee, log,makeList,getPlatform,makeInput} from '@learnmyself.com/utils'
 
+const PREVIOUS_PAGE = '${prev_page}'
+const NEXT_PAGE = '${next_page}'
 class initCommand extends Command {
   get command () {
     return 'install'
@@ -65,8 +67,14 @@ class initCommand extends Command {
       }
     })
     log.verbose('language', language)
-    // 搜索的参数
+     // 搜索的参数
+    this.q = q
+    this.language = language
     this.page = 1
+    this.per_page = 5
+    await this.doSearch()
+  }
+  async doSearch () {
     // 搜索结果相关数据
     let searchResult
     let total
@@ -74,9 +82,9 @@ class initCommand extends Command {
     // 判断平台
     if (this.platform === 'github') {
       const params = {
-        q: q + (language ? `+language:${language}` : ''),
+        q: this.q + (this.language ? `+language:${this.language}` : ''),
         page: this.page,
-        per_page: 5,
+        per_page: this.per_page,
         sort: 'stars_count',
         order: 'desc',
       }
@@ -85,16 +93,46 @@ class initCommand extends Command {
       searchResult = await this.gitApi.search(params)
       total = searchResult.total_count
       list = searchResult.items.map(item =>({
-        name: `${item.full_name} ---  (${item.description})`,
+        name: `${item.full_name}`,
         value:`${item.full_name}`
       }))
+    }
+    // 下一页
+    if (this.page * this.per_page < total) {
+      list.push({
+        name: '下一页',
+        value:NEXT_PAGE
+      })
+    }
+    // 上一页
+    if (this.page > 1) {
+      list.unshift({
+        name: '上一页',
+        value:PREVIOUS_PAGE
+      })
     }
     // 选择要下载的项目
     const keyword = await makeList({
       choices: list,
       message:'请选择要下载的项目'
     })
-    log.verbose('keyword：',keyword)
+    log.verbose('keyword：', keyword)
+    if (keyword === '${next_page}') {
+      this.nextPage()
+    } else if (keyword === '${prev_page}') {
+      this.prevPage()
+    } else {
+      // 下载逻辑
+    }
+  }
+  // 上一页
+  async prevPage () {
+    this.page--
+    this.doSearch()
+  }
+  async nextPage () {
+    this.page++
+    this.doSearch()
   }
 }
 
