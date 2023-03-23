@@ -29,7 +29,7 @@ class gitee extends gitServer {
       }
     })
   }
-  search (params) {
+  searchRepo (params) {
     return this.get('/search/repositories',params)
   }
 }

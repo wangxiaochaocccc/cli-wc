@@ -3,6 +3,8 @@ import {github,gitee, log,makeList,getPlatform,makeInput} from '@learnmyself.com
 
 const PREVIOUS_PAGE = '${prev_page}'
 const NEXT_PAGE = '${next_page}'
+const SEARCH_MODE_REPO = 'search_repo'
+const SEARCH_MODE_CODE = 'search_code'
 class initCommand extends Command {
   get command () {
     return 'install'
@@ -43,8 +45,24 @@ class initCommand extends Command {
     this.gitApi = githubApi
     this.platform = platform
   }
+  // 搜索模式
+  async chooseSearchMode () {
+    if (this.platform === 'github') {
+      this.mode = await makeList({
+        choices: [
+          {name:'项目',value:SEARCH_MODE_REPO},
+          {name:'源码',value:SEARCH_MODE_CODE}
+        ],
+        message:'请选择搜索模式：'
+      })
+    } else {
+      this.mode = SEARCH_MODE_REPO
+    }
+    log.verbose('mode',this.mode)
+  }
   // 搜索逻辑
   async searchGit () {
+    await this.chooseSearchMode()
     // 搜索的参数
     const q = await makeInput({
       message: '请输入搜索的内容',
@@ -88,14 +106,23 @@ class initCommand extends Command {
         sort: 'stars_count',
         order: 'desc',
       }
-      log.verbose('params',params)
-      // 搜索respositories
-      searchResult = await this.gitApi.search(params)
+      log.verbose('params', params)
+      if (this.mode === 'search_repo') {
+         // 搜索respositories
+        searchResult = await this.gitApi.searchRepo(params)
+        list = searchResult.items.map(item =>({
+          name: `${item.full_name}`,
+          value:`${item.full_name}`
+        }))
+      } else {
+        searchResult = await this.gitApi.searchCode(params)
+        console.log(searchResult);
+        list = searchResult.items.map(item =>({
+          name: `${item.repository.full_name}`,
+          value:`${item.repository.full_name}`
+        }))
+      }
       total = searchResult.total_count
-      list = searchResult.items.map(item =>({
-        name: `${item.full_name}`,
-        value:`${item.full_name}`
-      }))
     }
     // 下一页
     if (this.page * this.per_page < total) {
