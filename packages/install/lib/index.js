@@ -66,22 +66,35 @@ class initCommand extends Command {
     })
     log.verbose('language', language)
     // 搜索的参数
-    let params
     this.page = 1
+    // 搜索结果相关数据
+    let searchResult
+    let total
+    let list = []
     // 判断平台
     if (this.platform === 'github') {
-      params = {
+      const params = {
         q: q + (language ? `+language:${language}` : ''),
         page: this.page,
-        per_page: 10,
+        per_page: 5,
         sort: 'stars_count',
         order: 'desc',
       }
+      log.verbose('params',params)
+      // 搜索respositories
+      searchResult = await this.gitApi.search(params)
+      total = searchResult.total_count
+      list = searchResult.items.map(item =>({
+        name: `${item.full_name} ---  (${item.description})`,
+        value:`${item.full_name}`
+      }))
     }
-    log.verbose('params',params)
-    // 搜索respositories
-    const searchResult = await this.gitApi.search(params)
-    console.log(searchResult,11122);
+    // 选择要下载的项目
+    const keyword = await makeList({
+      choices: list,
+      message:'请选择要下载的项目'
+    })
+    log.verbose('keyword：',keyword)
   }
 }
 
