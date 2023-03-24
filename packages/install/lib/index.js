@@ -17,6 +17,7 @@ class initCommand extends Command {
   async action () {
     await this.generateGitAPI()
     await this.searchGit()
+    await this.getTags()
   }
   
   // 选择平台和配置tioken逻辑
@@ -59,6 +60,58 @@ class initCommand extends Command {
       this.mode = SEARCH_MODE_REPO
     }
     log.verbose('mode',this.mode)
+  }
+  // 选择tags逻辑
+  async getTags () {
+    this.tagePage = 1
+    this.tagPerPage = 5
+    await this.doSearchTags()
+  }
+  async doSearchTags () {
+    let params = {
+      page: this.tagePage,
+      per_page:this.tagPerPage
+    }
+    let tagsResult
+    let tagsChoices = []
+    if (this.platform === 'github') {
+      tagsResult = await this.gitApi.serchTags(this.keyword, params)
+      log.verbose('tagsResult',tagsResult)
+      tagsChoices = tagsResult.map(item => ({
+        name: item.name,
+        value: item.name
+      }))
+    } else {
+      
+    }
+    // 选择tags
+    if (tagsResult.length > 0) {
+      // 翻页相关
+      if (this.tagePage > 1) {
+        tagsChoices.unshift({
+          name: '上一页',
+          value:PREVIOUS_PAGE
+        })
+      }
+      tagsChoices.push({
+        name: '下一页',
+        value:NEXT_PAGE
+      })
+      
+      const selectedTags = await makeList({
+        message: '请选择tags',
+        choices:tagsChoices
+      })
+      log.verbose('selectedTags', selectedTags)
+
+      if (selectedTags === '${prev_page}') {
+        this.prevTagPage()
+      } else if (selectedTags === '${next_page}') {
+        this.nextTagPage()
+      }
+    } else {
+      log.warn('未找到相关tags')
+    }
   }
   // 搜索逻辑
   async searchGit () {
@@ -166,8 +219,9 @@ class initCommand extends Command {
       } else if (keyword === '${prev_page}') {
         this.prevPage()
       } else {
+        this.keyword = keyword
         // 下载逻辑
-      }
+      } 
     } else {
       log.success('未找到您想要的结果')
     }
@@ -180,6 +234,14 @@ class initCommand extends Command {
   async nextPage () {
     this.page++
     this.doSearch()
+  }
+  nextTagPage () {
+    this.tagePage++
+    this.doSearchTags()
+  }
+  prevTagPage () {
+    this.tagePage--
+    this.doSearchTags()
   }
 }
 
