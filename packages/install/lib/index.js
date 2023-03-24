@@ -116,13 +116,29 @@ class initCommand extends Command {
         }))
       } else {
         searchResult = await this.gitApi.searchCode(params)
-        console.log(searchResult);
         list = searchResult.items.map(item =>({
           name: `${item.repository.full_name}`,
           value:`${item.repository.full_name}`
         }))
       }
       total = searchResult.total_count
+    } else {
+      const params = {
+        q: this.q,
+        page: this.page,
+        per_page: this.per_page,
+        sort: 'stars_count',
+        order: 'desc',
+      }
+      if (this.language) {
+        params.language = this.language
+      }
+      total = 99999 //gitee没有返回total，所以给个默认值
+      searchResult = await this.gitApi.searchRepo(params)
+      list = searchResult.map(item =>({
+          name: `${item.full_name}`,
+          value:`${item.full_name}`
+      }))
     }
     // 下一页
     if (this.page * this.per_page < total) {
@@ -138,18 +154,22 @@ class initCommand extends Command {
         value:PREVIOUS_PAGE
       })
     }
-    // 选择要下载的项目
-    const keyword = await makeList({
-      choices: list,
-      message:'请选择要下载的项目'
-    })
-    log.verbose('keyword：', keyword)
-    if (keyword === '${next_page}') {
-      this.nextPage()
-    } else if (keyword === '${prev_page}') {
-      this.prevPage()
+    if (total > 0) {
+      // 选择要下载的项目
+      const keyword = await makeList({
+        choices: list,
+        message:'请选择要下载的项目'
+      })
+      log.verbose('keyword：', keyword)
+      if (keyword === '${next_page}') {
+        this.nextPage()
+      } else if (keyword === '${prev_page}') {
+        this.prevPage()
+      } else {
+        // 下载逻辑
+      }
     } else {
-      // 下载逻辑
+      log.success('未找到您想要的结果')
     }
   }
   // 上一页
