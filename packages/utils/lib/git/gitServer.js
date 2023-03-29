@@ -85,7 +85,13 @@ class gitServer {
     const pathPro = getProjectPath(cwd, fullName)
     const pkg = getPackageJSon(cwd, fullName)
     if (pkg) {
-      const { scripts } = pkg 
+      const { scripts, bin, name } = pkg 
+      if (scripts?.bin) {
+        return execa('npm', ['install', '-g', name, '--registry=https://registry.npmmirror.com'], {
+          cwd: pathPro,
+          stdout: 'inherit'
+        })
+      }
       if (scripts?.dev) {
         return execa('npm',['run','dev'],{cwd:pathPro,stdout:'inherit'})
       } else if (scripts?.start) {

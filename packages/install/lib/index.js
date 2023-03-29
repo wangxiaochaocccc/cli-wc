@@ -17,11 +17,10 @@ class initCommand extends Command {
 
   async action () {
     await this.generateGitAPI()
-    // await this.searchGit()
-    // await this.getTags()
-    // await this.cloneGitRepo()
-    // await this.installDependences()
-    this.keyword = 'a/vue-element-admin'
+    await this.searchGit()
+    await this.getTags()
+    await this.cloneGitRepo()
+    await this.installDependences()
     await this.runRepo()
   }
   // 下载源码
@@ -203,7 +202,7 @@ class initCommand extends Command {
         q: this.q + (this.language ? `+language:${this.language}` : ''),
         page: this.page,
         per_page: this.per_page,
-        sort: 'stars_count',
+        // sort: 'stars_count',
         order: 'desc',
       }
       log.verbose('params', params)
@@ -227,7 +226,7 @@ class initCommand extends Command {
         q: this.q,
         page: this.page,
         per_page: this.per_page,
-        sort: 'stars_count',
+        // sort: 'stars_count',
         order: 'desc',
       }
       if (this.language) {
