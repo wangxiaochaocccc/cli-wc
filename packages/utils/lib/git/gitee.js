@@ -36,6 +36,10 @@ class gitee extends gitServer {
   searchTags (fullName) {
     return this.get(`/repos/${fullName}/tags`)
   }
+  // 获取下载地址
+  getRepoUrl (fullName) {
+    return `https://gitee.com/${fullName}.git`
+  }
 }
 
 export default gitee

@@ -1,4 +1,5 @@
 import Command from '@learnmyself.com/command'
+import ora from 'ora'
 import {github,gitee, log,makeList,getPlatform,makeInput} from '@learnmyself.com/utils'
 
 const PREVIOUS_PAGE = '${prev_page}'
@@ -18,8 +19,25 @@ class initCommand extends Command {
     await this.generateGitAPI()
     await this.searchGit()
     await this.getTags()
+    await this.cloneGitRepo()
   }
-  
+  // 下载源码
+  async cloneGitRepo () {
+    let spinner=null
+    if (this.selectedTags) {
+      spinner = ora(`正在下载${this.keyword}(${this.selectedTags})...`).start() 
+    } else {
+      spinner = ora(`正在下载${this.keyword}...`).start()  
+    }
+    try {
+      await this.gitApi.cloneRepo(this.keyword, this.selectedTags)
+      log.success('下载成功')
+    } catch (e) {
+      log.error(e)
+    }finally {
+      spinner.stop()
+    }
+  }
   // 选择平台和配置tioken逻辑
   async generateGitAPI () {
     let platform = getPlatform()
@@ -81,7 +99,7 @@ class initCommand extends Command {
         name: item.name,
         value: item.name
       }))
-    } else {
+    } else if(this.platform === 'gitee') {
       tagsResult = await this.gitApi.searchTags(this.keyword)
       log.verbose('tagsResult',tagsResult)
       tagsChoices = tagsResult.map(item => ({
@@ -108,11 +126,12 @@ class initCommand extends Command {
         choices:tagsChoices
       })
       log.verbose('selectedTags', selectedTags)
-
       if (selectedTags === '${prev_page}') {
-        this.prevTagPage()
+        await this.prevTagPage()
       } else if (selectedTags === '${next_page}') {
-        this.nextTagPage()
+        await this.nextTagPage()
+      } else {
+        this.selectedTags = selectedTags
       }
     } else {
       log.warn('未找到相关tags')
@@ -199,7 +218,7 @@ class initCommand extends Command {
       }))
     }
     // 下一页
-    if (this.page * this.per_page < total) {
+    if ((this.page * this.per_page < total&&this.platform==='github')||list.length>0) {
       list.push({
         name: '下一页',
         value:NEXT_PAGE
@@ -219,10 +238,11 @@ class initCommand extends Command {
         message:'请选择要下载的项目'
       })
       log.verbose('keyword：', keyword)
+     
       if (keyword === '${next_page}') {
-        this.nextPage()
+        await this.nextPage()
       } else if (keyword === '${prev_page}') {
-        this.prevPage()
+        await this.prevPage()
       } else {
         this.keyword = keyword
         // 下载逻辑
@@ -234,11 +254,11 @@ class initCommand extends Command {
   // 上一页
   async prevPage () {
     this.page--
-    this.doSearch()
+    await this.doSearch()
   }
   async nextPage () {
     this.page++
-    this.doSearch()
+    await this.doSearch()
   }
   nextTagPage () {
     this.tagePage++

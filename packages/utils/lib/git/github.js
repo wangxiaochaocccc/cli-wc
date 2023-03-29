@@ -45,6 +45,10 @@ class github extends gitServer {
   searchTags (full_name,params) {
     return this.get(`repos/${full_name}/tags`,params)
   }
+   // 获取下载地址
+   getRepoUrl (fullName) {
+    return `https://github.com/${fullName}.git`
+  }
 }
 
 export default github

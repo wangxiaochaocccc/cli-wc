@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fs from 'fs'
 import fse from 'fs-extra'
+import {execa} from 'execa'
 import  {homedir} from 'node:os'
 import { pathExistsSync } from 'path-exists'
 import { makePassword } from '../inquirer.js'
@@ -45,6 +46,15 @@ class gitServer {
   }
   savePlatformPath (platform) {
     fs.writeFileSync(getTPlatformPath(),platform)
+  }
+  // 下载方法
+  cloneRepo (fullName, tags) {
+    if (tags) {
+      return execa('git',['clone',this.getRepoUrl(fullName),'-b',tags])
+    } else {
+      return execa('git',['clone',this.getRepoUrl(fullName)])
+    }
+    
   }
 }
 
