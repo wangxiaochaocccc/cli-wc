@@ -6,6 +6,7 @@ import  {homedir} from 'node:os'
 import { pathExistsSync } from 'path-exists'
 import { makePassword } from '../inquirer.js'
 import log from '../log.js'
+import { exec } from 'node:child_process'
 
 const TEMP_DIR = '.wc-cli'
 const TOKEN_PATH = '.token'
@@ -22,6 +23,20 @@ function getTPlatformPath () {
 function getPlatform () {
   if (pathExistsSync(getTPlatformPath())) {
     return fse.readFileSync(getTPlatformPath()).toString()
+  }
+  return null
+}
+// 获取项目地址
+function getProjectPath (cwd,fullName) {
+  const projectName = fullName.split('/')[1]
+  return path.resolve(cwd,projectName)
+}
+// 获取pkg
+function getPackageJSon (cwd,fullName) {
+  const pathPro = getProjectPath(cwd, fullName)
+  const pkgPath = path.resolve(pathPro, 'package.json')
+  if (pathExistsSync(pkgPath)) {
+    return fse.readJSONSync(pkgPath)
   }
   return null
 }
@@ -62,6 +77,22 @@ class gitServer {
     console.log(pathName);
     if (pathExistsSync(pathName)) {
       return execa('npm',['install','--registry=https://registry.npmmirror.com'],{cwd:pathName})
+    }
+    return null
+  }
+  // 启动项目
+  runRepo (cwd, fullName) {
+    const pathPro = getProjectPath(cwd, fullName)
+    const pkg = getPackageJSon(cwd, fullName)
+    if (pkg) {
+      const { scripts } = pkg 
+      if (scripts?.dev) {
+        return execa('npm',['run','dev'],{cwd:pathPro,stdout:'inherit'})
+      } else if (scripts?.start) {
+        return execa('npm',['run','start'],{cwd:pathPro,stdout:'inherit'})
+      } else {
+        log.warn('未找到启动命令')
+      }
     }
   }
 }

@@ -17,10 +17,12 @@ class initCommand extends Command {
 
   async action () {
     await this.generateGitAPI()
-    await this.searchGit()
-    await this.getTags()
-    await this.cloneGitRepo()
-    await this.installDependences()
+    // await this.searchGit()
+    // await this.getTags()
+    // await this.cloneGitRepo()
+    // await this.installDependences()
+    this.keyword = 'a/vue-element-admin'
+    await this.runRepo()
   }
   // 下载源码
   async cloneGitRepo () {
@@ -54,6 +56,10 @@ class initCommand extends Command {
     }finally {
       spinner.stop()
     }
+  }
+  // 启动项目
+  async runRepo () {
+    await this.gitApi.runRepo(process.cwd(),this.keyword)
   }
   // 选择平台和配置tioken逻辑
   async generateGitAPI () {
