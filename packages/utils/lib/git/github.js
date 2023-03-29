@@ -42,7 +42,7 @@ class github extends gitServer {
   searchCode (params) {
     return this.get('/search/code',params)
   }
-  serchTags (full_name,params) {
+  searchTags (full_name,params) {
     return this.get(`repos/${full_name}/tags`,params)
   }
 }

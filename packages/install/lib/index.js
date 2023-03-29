@@ -75,14 +75,19 @@ class initCommand extends Command {
     let tagsResult
     let tagsChoices = []
     if (this.platform === 'github') {
-      tagsResult = await this.gitApi.serchTags(this.keyword, params)
+      tagsResult = await this.gitApi.searchTags(this.keyword, params)
       log.verbose('tagsResult',tagsResult)
       tagsChoices = tagsResult.map(item => ({
         name: item.name,
         value: item.name
       }))
     } else {
-      
+      tagsResult = await this.gitApi.searchTags(this.keyword)
+      log.verbose('tagsResult',tagsResult)
+      tagsChoices = tagsResult.map(item => ({
+        name: item.name,
+        value: item.name
+      }))
     }
     // 选择tags
     if (tagsResult.length > 0) {

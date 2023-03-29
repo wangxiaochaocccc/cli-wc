@@ -32,6 +32,10 @@ class gitee extends gitServer {
   searchRepo (params) {
     return this.get('/search/repositories',params)
   }
+  // https://gitee.com/api/v5/repos/anji-plus/captcha/tags
+  searchTags (fullName) {
+    return this.get(`/repos/${fullName}/tags`)
+  }
 }
 
 export default gitee
