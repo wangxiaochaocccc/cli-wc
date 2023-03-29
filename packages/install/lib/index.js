@@ -20,6 +20,7 @@ class initCommand extends Command {
     await this.searchGit()
     await this.getTags()
     await this.cloneGitRepo()
+    await this.installDependences()
   }
   // 下载源码
   async cloneGitRepo () {
@@ -32,6 +33,22 @@ class initCommand extends Command {
     try {
       await this.gitApi.cloneRepo(this.keyword, this.selectedTags)
       log.success('下载成功')
+    } catch (e) {
+      log.error(e)
+    }finally {
+      spinner.stop()
+    }
+  }
+  // 依赖安装
+  async installDependences () {
+    let spinner=ora(`正在安装依赖...`).start()
+    try {
+      const res = await this.gitApi.installDependences(process.cwd(), this.keyword)
+      if (res) {
+        log.success('安装依赖成功')
+      } else {
+        log.error('安装依赖失败')
+      }
     } catch (e) {
       log.error(e)
     }finally {

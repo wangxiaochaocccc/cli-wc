@@ -54,7 +54,15 @@ class gitServer {
     } else {
       return execa('git',['clone',this.getRepoUrl(fullName)])
     }
-    
+  }
+  // 安装依赖
+  installDependences (cwd, fullName) {
+    const projectName = fullName.split('/')[1]
+    const pathName = path.resolve(cwd, projectName)
+    console.log(pathName);
+    if (pathExistsSync(pathName)) {
+      return execa('npm',['install','--registry=https://registry.npmmirror.com'],{cwd:pathName})
+    }
   }
 }
 
