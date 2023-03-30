@@ -1,8 +1,10 @@
+import path from 'node:path'
 import Command from '@learnmyself.com/command'
 import {log} from '@learnmyself.com/utils'
 import { ESLint} from 'eslint'
 import vueConfig from './eslint/vueConfig.js'
 import jest from 'jest'
+import mocha from 'mocha'
 class lintCommand extends Command {
   get command () {
     return 'lint'
@@ -27,7 +29,14 @@ class lintCommand extends Command {
     const ESLintResult = await this.parseESLintResult(resultText)
     log.verbose('ESLintResult', ESLintResult)
     // jest检查
+    log.info('正在执行jest检查')
     await jest.run('test')
+    // mocha检查
+    log.info('正在执行mocha检查')
+    const mochaInstance = new mocha()
+    mochaInstance.addFile(path.resolve(cwd, '__test__/mocha_test.js'))
+    mochaInstance.run()
+    log.success('检查完成')
   }
 
   async handleResult (resultText,type) {
