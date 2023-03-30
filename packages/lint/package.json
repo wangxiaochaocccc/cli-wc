@@ -1,0 +1,30 @@
+{
+  "name": "@learnmyself.com/lint",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "wangchao <wangxiaochaocccc@163.com>",
+  "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangxiaochaocccc/cli-wc.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/lint.test.js"
+  },
+  "bugs": {
+    "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
+  },
+  "type": "module",
+  "dependencies": {
+    "@learnmyself.com/command": "^0.0.0"
+  }
+}
