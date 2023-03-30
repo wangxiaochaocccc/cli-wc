@@ -2,6 +2,7 @@ import Command from '@learnmyself.com/command'
 import {log} from '@learnmyself.com/utils'
 import { ESLint} from 'eslint'
 import vueConfig from './eslint/vueConfig.js'
+import jest from 'jest'
 class lintCommand extends Command {
   get command () {
     return 'lint'
@@ -24,7 +25,9 @@ class lintCommand extends Command {
     const formatter = await eslint.loadFormatter('stylish')
     const resultText = formatter.format(rules)
     const ESLintResult = await this.parseESLintResult(resultText)
-    log.verbose('ESLintResult',ESLintResult)
+    log.verbose('ESLintResult', ESLintResult)
+    // jest检查
+    await jest.run('test')
   }
 
   async handleResult (resultText,type) {
