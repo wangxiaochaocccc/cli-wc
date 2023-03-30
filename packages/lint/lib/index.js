@@ -1,5 +1,5 @@
 import Command from '@learnmyself.com/command'
-
+import { ESLint} from 'eslint'
 class lintCommand extends Command {
   get command () {
     return 'lint'
@@ -11,8 +11,14 @@ class lintCommand extends Command {
 
   get options () { }
 
-  action () {
-    
+  async action () {
+    // eslint
+    const cwd = process.cwd()
+    const eslint = new ESLint({ cwd })
+    const rules = await eslint.lintFiles(['**/*.js'])
+    const formatter = await eslint.loadFormatter('stylish')
+    const resultText = formatter.format(rules)
+    console.log(resultText,11);
   }
 }
 
