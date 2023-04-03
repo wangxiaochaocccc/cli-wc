@@ -1,5 +1,6 @@
+// import {homedir} from 'node:os'
 import Command from '@learnmyself.com/command'
-// import { log } from '@learnmyself.com/utils'
+import { log,getPlatform,initGitPlatform } from '@learnmyself.com/utils'
 
 
 class commitCommand extends Command {
@@ -12,7 +13,16 @@ class commitCommand extends Command {
   get options () { }
 
   async action () {
-   console.log(11111111);
+   this.createRemoteRepo()
+  }
+  // 步骤一：创建远程仓库
+  async createRemoteRepo () {
+    // 获取平台信息
+    const platform = await getPlatform()
+    log.verbose('platform', platform)
+    // 如果没有平台信息，走选择平台逻辑
+    const gitResult = await initGitPlatform()
+    log.verbose('gitResult',gitResult)
   }
 }
 

@@ -6,7 +6,7 @@ import  {homedir} from 'node:os'
 import { pathExistsSync } from 'path-exists'
 import { makePassword } from '../inquirer.js'
 import log from '../log.js'
-import { exec } from 'node:child_process'
+// import { exec } from 'node:child_process'
 
 const TEMP_DIR = '.wc-cli'
 const TOKEN_PATH = '.token'
@@ -40,6 +40,7 @@ function getPackageJSon (cwd,fullName) {
   }
   return null
 }
+
 class gitServer {
   constructor() {}
   async init () {

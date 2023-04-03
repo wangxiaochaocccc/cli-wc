@@ -1,6 +1,6 @@
 import Command from '@learnmyself.com/command'
 import ora from 'ora'
-import {github,gitee, log,makeList,getPlatform,makeInput} from '@learnmyself.com/utils'
+import {initGitPlatform, log,makeList,makeInput} from '@learnmyself.com/utils'
 
 const PREVIOUS_PAGE = '${prev_page}'
 const NEXT_PAGE = '${next_page}'
@@ -62,29 +62,10 @@ class initCommand extends Command {
   }
   // 选择平台和配置tioken逻辑
   async generateGitAPI () {
-    let platform = getPlatform()
-    if (!platform) {
-      // 选择git平台
-      platform=await makeList({
-        choices: [
-          {name:'GitHub',value:'github'},
-          {name:'Gitee',value:'gitee'},
-        ],
-        message:"请选择git平台"
-      })
-    }
-    log.verbose("Paltform", platform)
-    // 平台选择后
-    let githubApi
-    if (platform === 'github') {
-      githubApi = new github()
-    } else {
-      githubApi = new gitee()
-    }
-    await githubApi.init()
-    await githubApi.savePlatformPath(platform)
-    this.gitApi = githubApi
-    this.platform = platform
+    // 选择平台的逻辑
+    const res = await initGitPlatform()
+    this.gitApi = res.githubApi
+    this.platform = res.platform
   }
   // 搜索模式
   async chooseSearchMode () {
