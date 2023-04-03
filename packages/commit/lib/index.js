@@ -1,6 +1,6 @@
 // import {homedir} from 'node:os'
 import Command from '@learnmyself.com/command'
-import { log,getPlatform,initGitPlatform,initGitType } from '@learnmyself.com/utils'
+import { log,clearCache,initGitPlatform,initGitType } from '@learnmyself.com/utils'
 
 
 class commitCommand extends Command {
@@ -10,10 +10,17 @@ class commitCommand extends Command {
   get description () {
     return 'commit code'
   }
-  get options () { }
+  get options () { 
+    return [
+      ['-c,--clear','清空缓存',false]
+    ]
+  }
 
-  async action () {
-   this.createRemoteRepo()
+  async action ([{ clear }]) {
+    if (clear) {
+      await clearCache()
+    }
+    this.createRemoteRepo()
   }
   // 步骤一：创建远程仓库
   async createRemoteRepo () {

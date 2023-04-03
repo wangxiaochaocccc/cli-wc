@@ -40,6 +40,14 @@ function getPackageJSon (cwd,fullName) {
   }
   return null
 }
+// 清空缓存
+function clearCache () {
+  const tempPath = path.resolve(homedir(), TEMP_DIR)
+  const platFormPath = path.resolve(tempPath,PLATFORM_PATH)
+  const tokenPath = path.resolve(tempPath, TOKEN_PATH)
+  fse.removeSync(platFormPath)
+  fse.removeSync(tokenPath)
+}
 
 class gitServer {
   constructor() {}
@@ -112,5 +120,6 @@ class gitServer {
 
 export {
   getPlatform,
-  gitServer
+  gitServer,
+  clearCache
 } 
