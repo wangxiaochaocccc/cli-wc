@@ -1,6 +1,6 @@
 // import {homedir} from 'node:os'
 import Command from '@learnmyself.com/command'
-import { log,clearCache,initGitPlatform,initGitType } from '@learnmyself.com/utils'
+import { log,clearCache,initGitPlatform,initGitType, makeList } from '@learnmyself.com/utils'
 
 
 class commitCommand extends Command {
