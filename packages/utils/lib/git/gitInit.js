@@ -1,5 +1,5 @@
 import { makeList } from '../inquirer.js'
-import { getPlatform } from './gitServer.js'
+import { getPlatform,getOwn,getLogin } from './gitServer.js'
 import log from '../log.js'
 import gitee from './gitee.js'
 import github from './github.js'
@@ -32,38 +32,43 @@ async function initGitPlatform () {
 }
 // git类型：组织，个人
 async function initGitType (gitApi) {
-  const orgs = await gitApi.getOrg()
-  const user = await gitApi.getUser()
-  log.verbose('orgs',orgs)
-  log.verbose('user', user)
   // user or orgnization
-  let gitOwn //仓库类型
-  let gitLogin //仓库登录名
-  if (!gitOwn) {
-    gitOwn = await makeList({
-      message: '请选择仓库类型：',
-      choices: [
-        {name:'User',value:'user'},
-        {name:'Orgnization',value:'orgnization'},
-      ]
-    })
+  let gitOwn = getOwn() //仓库类型
+  let gitLogin = getLogin() //仓库登录名
+  if (!gitLogin&&!gitOwn) {
+    const orgs = await gitApi.getOrg()
+    const user = await gitApi.getUser()
+    log.verbose('orgs',orgs)
+    log.verbose('user', user)
+
+    if (!gitOwn) {
+      gitOwn = await makeList({
+        message: '请选择仓库类型：',
+        choices: [
+          {name:'User',value:'user'},
+          {name:'Orgnization',value:'orgnization'},
+        ]
+      })
+    }
+    if (gitOwn === 'user') {
+      gitLogin=user?.login
+    } else {
+      const orgsList = orgs.map(item => ({
+        name: item.name,
+        value:item.name
+      }))
+      gitLogin = await makeList({
+        message: '请选择组织：',
+        choices: orgsList
+      })
+    }
+    await gitApi.saveLogin(gitLogin)
+    await gitApi.saveOwn(gitOwn)
+    log.verbose('gitLogin', gitLogin)
   }
-  if (gitOwn === 'user') {
-    gitLogin=user?.login
-  } else {
-    const orgsList = orgs.map(item => ({
-      name: item.name,
-      value:item.name
-    }))
-    gitLogin = await makeList({
-      message: '请选择组织：',
-      choices: orgsList
-    })
-  }
-  log.verbose('gitLogin',gitLogin)
-  if (!gitLogin) {
-    throw new Error('没有git登录名')
-  }
+  if (!gitLogin || !gitOwn) {
+      throw new Error('没有git登录名信息，请执行‘wc-cli commit --clear’,重新填写相关信息')
+    }
 }
 
 export {

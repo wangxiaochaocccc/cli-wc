@@ -7,7 +7,7 @@ import { printLog } from './printLog.js'
 import request from './request.js'
 import github from './git/github.js'
 import gitee from './git/gitee.js'
-import { getPlatform,clearCache } from './git/gitServer.js'
+import { getPlatform,clearCache,getOwn,getLogin } from './git/gitServer.js'
 import {initGitPlatform,initGitType} from './git/gitInit.js'
 
 export {
@@ -25,5 +25,7 @@ export {
   getPlatform,
   initGitPlatform,
   initGitType,
-  clearCache
+  clearCache,
+  getLogin,
+  getOwn
 }

@@ -11,6 +11,8 @@ import log from '../log.js'
 const TEMP_DIR = '.wc-cli'
 const TOKEN_PATH = '.token'
 const PLATFORM_PATH = '.platform'
+const OWN_PATH = '.git_own'
+const LOGIN_PATH = '.git_login'
 // 获取token地址
 function getTokenPath () {
   return path.resolve(homedir(),TEMP_DIR,TOKEN_PATH)
@@ -19,10 +21,32 @@ function getTokenPath () {
 function getTPlatformPath () {
   return path.resolve(homedir(),TEMP_DIR,PLATFORM_PATH)
 }
+// 获取gitown地址
+function getOwnPath () {
+  return path.resolve(homedir(),TEMP_DIR,OWN_PATH)
+}
+// 获取gitlogin地址
+function getLoginPath () {
+  return path.resolve(homedir(),TEMP_DIR,LOGIN_PATH)
+}
 // 获取platform内容
 function getPlatform () {
   if (pathExistsSync(getTPlatformPath())) {
     return fse.readFileSync(getTPlatformPath()).toString()
+  }
+  return null
+}
+// 获取own内容
+function getOwn () {
+  if (pathExistsSync(getOwnPath())) {
+    return fse.readFileSync(getOwnPath()).toString()
+  }
+  return null
+}
+// 获取login内容
+function getLogin () {
+  if (pathExistsSync(getLoginPath())) {
+    return fse.readFileSync(getLoginPath()).toString()
   }
   return null
 }
@@ -45,8 +69,12 @@ function clearCache () {
   const tempPath = path.resolve(homedir(), TEMP_DIR)
   const platFormPath = path.resolve(tempPath,PLATFORM_PATH)
   const tokenPath = path.resolve(tempPath, TOKEN_PATH)
+  const ownPath = path.resolve(tempPath, OWN_PATH)
+  const loginPath = path.resolve(tempPath, LOGIN_PATH)
   fse.removeSync(platFormPath)
   fse.removeSync(tokenPath)
+  fse.removeSync(ownPath)
+  fse.removeSync(loginPath)
 }
 
 class gitServer {
@@ -70,6 +98,12 @@ class gitServer {
   }
   savePlatformPath (platform) {
     fs.writeFileSync(getTPlatformPath(),platform)
+  }
+  saveOwn (own) {
+    fs.writeFileSync(getOwnPath(),own)
+  }
+  saveLogin (login) {
+    fs.writeFileSync(getLoginPath(),login)
   }
   // 下载方法
   cloneRepo (fullName, tags) {
@@ -120,6 +154,8 @@ class gitServer {
 
 export {
   getPlatform,
+  getLogin,
+  getOwn,
   gitServer,
   clearCache
 } 
