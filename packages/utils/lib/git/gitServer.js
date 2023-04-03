@@ -102,6 +102,12 @@ class gitServer {
       }
     }
   }
+  getOrg () {
+    throw new Error('getOrg must be implemented')
+  }
+  getUser () {
+    throw new Error('getOrg must be implemented')
+  }
 }
 
 export {

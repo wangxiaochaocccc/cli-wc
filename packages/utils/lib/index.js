@@ -8,7 +8,7 @@ import request from './request.js'
 import github from './git/github.js'
 import gitee from './git/gitee.js'
 import { getPlatform } from './git/gitServer.js'
-import {initGitPlatform} from './git/gitInit.js'
+import {initGitPlatform,initGitType} from './git/gitInit.js'
 
 export {
   log,
@@ -23,5 +23,6 @@ export {
   github,
   gitee,
   getPlatform,
-  initGitPlatform
+  initGitPlatform,
+  initGitType
 }

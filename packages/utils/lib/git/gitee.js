@@ -40,6 +40,14 @@ class gitee extends gitServer {
   getRepoUrl (fullName) {
     return `https://gitee.com/${fullName}.git`
   }
+  // 获取用户相关
+  getUser () {
+    return this.get('/user')
+  }
+  // 获取组织
+  getOrg () {
+    return this.get('/user/orgs')
+  }
 }
 
 export default gitee

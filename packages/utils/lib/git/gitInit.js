@@ -30,7 +30,15 @@ async function initGitPlatform () {
   return {githubApi,platform}
   // this.platform = platform
 }
+// git类型：组织，个人
+async function initGitType (gitApi) {
+  const orgs = await gitApi.getOrg()
+  const user = await gitApi.getUser()
+  log.verbose('orgs',orgs)
+  log.verbose('user',user)
+}
 
 export {
-  initGitPlatform
+  initGitPlatform,
+  initGitType
 }
