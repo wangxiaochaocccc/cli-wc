@@ -8,7 +8,7 @@ import request from './request.js'
 import github from './git/github.js'
 import gitee from './git/gitee.js'
 import { getPlatform,clearCache,getOwn,getLogin } from './git/gitServer.js'
-import {initGitPlatform,initGitType} from './git/gitInit.js'
+import {initGitPlatform,initGitType,createRepo} from './git/gitInit.js'
 
 export {
   log,
@@ -27,5 +27,6 @@ export {
   initGitType,
   clearCache,
   getLogin,
-  getOwn
+  getOwn,
+  createRepo
 }

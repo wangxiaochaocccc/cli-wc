@@ -40,7 +40,6 @@ async function initGitType (gitApi) {
     const user = await gitApi.getUser()
     log.verbose('orgs',orgs)
     log.verbose('user', user)
-
     if (!gitOwn) {
       gitOwn = await makeList({
         message: '请选择仓库类型：',
@@ -55,23 +54,29 @@ async function initGitType (gitApi) {
     } else {
       const orgsList = orgs.map(item => ({
         name: item.name,
-        value:item.name
+        value:item.login
       }))
       gitLogin = await makeList({
         message: '请选择组织：',
         choices: orgsList
       })
     }
-    await gitApi.saveLogin(gitLogin)
-    await gitApi.saveOwn(gitOwn)
-    log.verbose('gitLogin', gitLogin)
   }
+  await gitApi.saveLogin(gitLogin)
+  await gitApi.saveOwn(gitOwn)
+  log.verbose('gitLogin', gitLogin)
   if (!gitLogin || !gitOwn) {
-      throw new Error('没有git登录名信息，请执行‘wc-cli commit --clear’,重新填写相关信息')
-    }
+    throw new Error('没有git登录名信息，请执行‘wc-cli commit --clear’,重新填写相关信息')
+  }
+}
+// 创建仓库
+async function createRepo (gitApi,name) {
+  const res = await gitApi.createRepoFun(name)
+  console.log(res);
 }
 
 export {
   initGitPlatform,
-  initGitType
+  initGitType,
+  createRepo
 }

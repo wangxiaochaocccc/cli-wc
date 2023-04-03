@@ -100,9 +100,11 @@ class gitServer {
     fs.writeFileSync(getTPlatformPath(),platform)
   }
   saveOwn (own) {
+    this.own = own
     fs.writeFileSync(getOwnPath(),own)
   }
   saveLogin (login) {
+    this.login = login
     fs.writeFileSync(getLoginPath(),login)
   }
   // 下载方法
@@ -149,6 +151,9 @@ class gitServer {
   }
   getUser () {
     throw new Error('getOrg must be implemented')
+  }
+  createRepoFun () {
+    throw new Error('createRepo must be implemented')
   }
 }
 
