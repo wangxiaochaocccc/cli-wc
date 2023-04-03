@@ -48,6 +48,14 @@ class github extends gitServer {
    // 获取下载地址
    getRepoUrl (fullName) {
     return `https://github.com/${fullName}.git`
+   }
+  // 获取用户相关
+  getUser () {
+    return this.get('/user')
+  }
+  // 获取组织
+  getOrg () {
+    return this.get('/user/orgs')
   }
 }
 
