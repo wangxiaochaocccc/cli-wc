@@ -76,6 +76,7 @@ async function initGitType (gitApi) {
 // 创建仓库
 async function createRepo (gitApi,name) {
   const res = await gitApi.createRepoFun(name)
+  return res
 }
 
 export {

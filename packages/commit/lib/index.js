@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import fse from 'fs-extra'
 import path from 'node:path'
 import Command from '@learnmyself.com/command'
@@ -35,7 +36,36 @@ class commitCommand extends Command {
     const cwd = process.cwd()
     const pkgPath = path.resolve(cwd, 'package.json')
     const pkg = fse.readJSONSync(pkgPath)
-    await createRepo(gitResult.githubApi,pkg.name)
+    await createRepo(gitResult.githubApi, pkg.name)
+    // 创建gitingore
+    const gitIngorePath = path.resolve(cwd, '.gitingore')
+    if (!fs.existsSync(gitIngorePath)) {
+      log.info('.gitingore不存在,开始创建')
+      fs.writeFileSync(gitIngorePath,`# Logs
+      logs
+      *.log
+      npm-debug.log*
+      yarn-debug.log*
+      yarn-error.log*
+      pnpm-debug.log*
+      lerna-debug.log*
+      node_modules
+      dist
+      dist-ssr
+      *.local
+      # Editor directories and files
+      .vscode/*
+      !.vscode/extensions.json
+      .idea
+      .DS_Store
+      *.suo
+      *.ntvs*
+      *.njsproj
+      *.sln
+      *.sw?
+      `)
+      log.info('.gitingore创建完成')
+    }
   }
 }
 
