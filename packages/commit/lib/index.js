@@ -75,8 +75,15 @@ class commitCommand extends Command {
     // 获取远程仓库地址
     const gitRemotePath = this.gitResult.githubApi.getRepoUrl(`${this.gitResult.githubApi.login}/${this.name}`)
     // 初始化git
-    const git = new SimpleGit(process.cwd())
-    git.init()
+    this.git =SimpleGit(process.cwd())
+    await this.git.init()
+    log.success('git初始化完成')
+    // 获取所有remotes
+    const remotes = await this.git.getRemotes()
+    if (!remotes.find(remote => remote.name === 'origin')) {
+      this.git.addRemote('origin', gitRemotePath)
+      log.success('添加git remote完成',gitRemotePath)
+    }
   }
 }
 
