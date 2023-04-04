@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {gitServer} from './gitServer.js';
+import log from '../log.js'
 
 const BASE_URL = 'https://gitee.com/api/v5/'
 class gitee extends gitServer {
@@ -60,14 +61,25 @@ class gitee extends gitServer {
   getOrg () {
     return this.get('/user/orgs')
   }
+  getRepo (login,name) {
+    return this.get(`/repos/${login}/${name}`).catch(()=>null)
+  }
   // 创建仓库
   createRepoFun (name) {
-    if (this.own === 'user') {
-      return this.post('/user/repos',{name})
-    } else if (this.own === 'orgnization') {
-      const url = `orgs/${this.login}/repos`
-      return this.post(url,{name})
+    // 检查仓库是否存在
+    const repo = this.getRepo(this.login, name)
+    if (!repo) {
+      log.info('仓库不存在，正在创建...')
+      if (this.own === 'user') {
+        return this.post('/user/repos',{name})
+      } else if (this.own === 'orgnization') {
+        const url = `orgs/${this.login}/repos`
+        return this.post(url,{name})
+      }
+    } else {
+      log.info('仓库已经存在')
     }
+    return repo
   }
 }
 
