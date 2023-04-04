@@ -22,21 +22,23 @@ class commitCommand extends Command {
     if (clear) {
       await clearCache()
     }
-    this.createRemoteRepo()
+    await this.createRemoteRepo()
+    await this.initLocalGit()
   }
   // 步骤一：创建远程仓库
   async createRemoteRepo () {
     // 如果没有平台信息，走选择平台逻辑
-    const gitResult = await initGitPlatform()
-    log.verbose('gitResult', gitResult)
+    this.gitResult = await initGitPlatform()
+    log.verbose('gitResult', this.gitResult)
     // 仓库类型选择
-    await initGitType(gitResult.githubApi)
+    await initGitType(this.gitResult.githubApi)
     // 创建仓库
     // 获取pkg.name
     const cwd = process.cwd()
     const pkgPath = path.resolve(cwd, 'package.json')
     const pkg = fse.readJSONSync(pkgPath)
-    await createRepo(gitResult.githubApi, pkg.name)
+    this.name = pkg.name
+    await createRepo(this.gitResult.githubApi, this.name)
     // 创建gitingore
     const gitIngorePath = path.resolve(cwd, '.gitingore')
     if (!fs.existsSync(gitIngorePath)) {
@@ -66,6 +68,12 @@ class commitCommand extends Command {
       `)
       log.info('.gitingore创建完成')
     }
+  }
+  // 步骤二：初始化本地git
+  async initLocalGit () {
+    // 获取远程仓库地址
+    const gitRemotePath = this.gitResult.githubApi.getRepoUrl(`${this.gitResult.githubApi.login}/${this.name}`)
+    console.log(gitRemotePath);
   }
 }
 
