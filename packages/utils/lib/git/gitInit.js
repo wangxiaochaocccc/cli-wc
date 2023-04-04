@@ -52,6 +52,10 @@ async function initGitType (gitApi) {
     if (gitOwn === 'user') {
       gitLogin=user?.login
     } else {
+      if (!orgs.length) {
+        log.error("您暂时还没有组织，所以，强制结束本次流程")
+        return
+      }
       const orgsList = orgs.map(item => ({
         name: item.name,
         value:item.login
