@@ -65,9 +65,9 @@ class gitee extends gitServer {
     return this.get(`/repos/${login}/${name}`).catch(()=>null)
   }
   // 创建仓库
-  createRepoFun (name) {
+  async createRepoFun (name) {
     // 检查仓库是否存在
-    const repo = this.getRepo(this.login, name)
+    const repo = await this.getRepo(this.login, name)
     if (!repo) {
       log.info('仓库不存在，正在创建...')
       if (this.own === 'user') {
@@ -78,8 +78,9 @@ class gitee extends gitServer {
       }
     } else {
       log.info('仓库已经存在')
+      return repo
     }
-    return repo
+   
   }
 }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {gitServer} from './gitServer.js';
+import log from '../log.js'
 
 const BASE_URL = 'https://api.github.com/'
 class github extends gitServer {
@@ -29,11 +30,12 @@ class github extends gitServer {
       }
     )
   }
-  get (url,params) {
+  get (url,params,headers) {
     return this.service({
       url,
       method: 'get',
-      params
+      params,
+      headers
     })
   }
 
@@ -70,15 +72,27 @@ class github extends gitServer {
   getOrg () {
     return this.get('/user/orgs')
   }
+  getRepo (login,name) {
+    return this.get(`/repos/${login}/${name}`, {
+      Accept:'application/vnd.github+json'
+    }).catch(()=>null)
+  }
   // 创建仓库
-  createRepoFun (name) {
-    if (this.own === 'user') {
-      return this.post('/user/repos', { name }, {
-        Accept:'application/vnd.github+json'
-      })
-    } else if (this.own === 'orgnization') {
-      const url = `orgs/${this.login}/repos`
-      return this.post(url,{name})
+  async createRepoFun (name) {
+    const repo = await this.getRepo(this.login, name)
+    if (!repo) {
+      log.info('仓库不存在，正在创建...')
+      if (this.own === 'user') {
+        return this.post('/user/repos', { name }, {
+          Accept:'application/vnd.github+json'
+        })
+      } else if (this.own === 'orgnization') {
+        const url = `orgs/${this.login}/repos`
+        return this.post(url,{name})
+      }
+    } else {
+      log.info('仓库已经存在')
+      return repo
     }
   }
 }
