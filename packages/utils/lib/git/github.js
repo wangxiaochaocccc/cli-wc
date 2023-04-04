@@ -36,6 +36,19 @@ class github extends gitServer {
       params
     })
   }
+
+  post (url,data,headers) {
+    return this.service({
+      url,
+      method: 'post',
+      data,
+      params: {
+        access_token:this.token
+      },
+      headers
+    })
+  }
+
   searchRepo (params) {
     return this.get('/search/repositories',params)
   }
@@ -56,6 +69,17 @@ class github extends gitServer {
   // 获取组织
   getOrg () {
     return this.get('/user/orgs')
+  }
+  // 创建仓库
+  createRepoFun (name) {
+    if (this.own === 'user') {
+      return this.post('/user/repos', { name }, {
+        Accept:'application/vnd.github+json'
+      })
+    } else if (this.own === 'orgnization') {
+      const url = `orgs/${this.login}/repos`
+      return this.post(url,{name})
+    }
   }
 }
 
