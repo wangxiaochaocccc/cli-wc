@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import fse from 'fs-extra'
 import path from 'node:path'
+import SimpleGit from 'simple-git'
 import Command from '@learnmyself.com/command'
 import { log,clearCache,initGitPlatform,initGitType, createRepo } from '@learnmyself.com/utils'
 
@@ -73,7 +74,9 @@ class commitCommand extends Command {
   async initLocalGit () {
     // 获取远程仓库地址
     const gitRemotePath = this.gitResult.githubApi.getRepoUrl(`${this.gitResult.githubApi.login}/${this.name}`)
-    console.log(gitRemotePath);
+    // 初始化git
+    const git = new SimpleGit(process.cwd())
+    git.init()
   }
 }
 
