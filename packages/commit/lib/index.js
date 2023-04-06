@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import fse from 'fs-extra'
 import path from 'node:path'
-import {simpleGit} from 'simple-git'
+import simpleGit from 'simple-git'
 import Command from '@learnmyself.com/command'
 import { log,clearCache,initGitPlatform,initGitType, createRepo, makeInput } from '@learnmyself.com/utils'
 
