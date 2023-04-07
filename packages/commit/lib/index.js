@@ -140,6 +140,10 @@ pnpm-debug.log*
     await this.getCorrectVersion()
     // stash检查
     await this.checkStash()
+    // 冲突检查
+    await this.checkConflict()
+    // 自动提交未提交代码
+    await this.checkNotCommit()
   }
   // 获取版本号
   async getCorrectVersion () {
@@ -215,6 +219,15 @@ pnpm-debug.log*
       await this.git.stash(['pop'])
     }
     log.success('stash区pop完成')
+  }
+  // 代码冲突检查
+  async checkConflict () {
+    log.info('代码冲突检查')
+    const status = await this.git.status()
+    if (status.conflicted.length > 0) {
+      throw new Error('当前代码存在冲突，请解决冲突后再试！')
+    }
+    log.success('代码冲突检查成功')
   }
 }
 
