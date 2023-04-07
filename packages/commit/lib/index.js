@@ -144,6 +144,8 @@ pnpm-debug.log*
     await this.checkConflict()
     // 自动提交未提交代码
     await this.checkNotCommit()
+    // 开发分支自动切换
+    await this.checkoutBranch()
   }
   // 获取版本号
   async getCorrectVersion () {
@@ -228,6 +230,15 @@ pnpm-debug.log*
       throw new Error('当前代码存在冲突，请解决冲突后再试！')
     }
     log.success('代码冲突检查成功')
+  }
+  // 开发分支自动切换
+  async checkoutBranch () {
+    const localBranch = await this.git.branchLocal()
+    if (localBranch.all.indexOf(this.branch) > -1) {
+      await this.git.checkout(this.branch)
+    } else {
+      await this.git.checkoutLocalBranch(this.branch)
+    }
   }
 }
 
