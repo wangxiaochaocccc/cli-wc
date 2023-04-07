@@ -92,7 +92,7 @@ pnpm-debug.log*
       // 检查对应远程分支是否存在
       const tags = await this.git.listRemote(['--refs']);
       if (tags.indexOf('refs/heads/master') >= 0) {
-        await this.pullRemoteRepo('master')
+        await this.pullRemoteRepo('master',{'--allow-unrelated-histories': null})
       } else {
         await this.pushRemoteRepo('master')
       }
@@ -161,7 +161,7 @@ pnpm-debug.log*
       log.info(`当前版本号大于线上版本号，${devVersion} >= ${releaseVersion}`)
       this.branch = `dev/${devVersion}`
     } else {
-      log.info(`当前版本号小于向上版本号，${devVersion} < ${releaseVersion}`)
+      log.info(`当前版本号小于线上版本号，${devVersion} < ${releaseVersion}`)
       const incType = await makeList({
         message: '自动升级版本，请选择升级版本类型：',
         choices: [
@@ -255,10 +255,10 @@ pnpm-debug.log*
       log.success(`不存在${this.branch}远程分支`)
     }
   }
-  async pullRemoteRepo (branch) {
+  async pullRemoteRepo (branch,options) {
     // 拉去远程分支
-    await this.git.pull('origin', branch).catch(err => {
-      if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
+    await this.git.pull('origin', branch,options).catch(err => {
+      if (err.message.indexOf('Couldn\'t find remote ref'+branch) > -1) {
         log.warn('拉去远程[master]分支失败')
       }
       process.exit(0)
