@@ -86,21 +86,21 @@ pnpm-debug.log*
     const remotes = await this.git.getRemotes()
     if (!remotes.find(remote => remote.name === 'origin')) {
       this.git.addRemote('origin', gitRemotePath)
-      log.success('添加git remote完成',gitRemotePath)
-    }
-    // 是否有代码未提交
-    await this.checkNotCommit()
-    // 检查对应远程分支是否存在
-    const tags = await this.git.listRemote(['--refs']);
-    if (tags.indexOf('refs/heads/master') >= 0) {
-      // 拉去远程分支
-      await this.git.pull('origin', 'master').catch(err => {
-        if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
-          log.warn('拉去远程[master]分支失败')
-        }
-      })
-    } else {
-      await this.pushRemoteRepo('master')
+      log.success('添加git remote完成', gitRemotePath)
+      // 是否有代码未提交
+      await this.checkNotCommit()
+      // 检查对应远程分支是否存在
+      const tags = await this.git.listRemote(['--refs']);
+      if (tags.indexOf('refs/heads/master') >= 0) {
+        // 拉去远程分支
+        await this.git.pull('origin', 'master').catch(err => {
+          if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
+            log.warn('拉去远程[master]分支失败')
+          }
+        })
+      } else {
+        await this.pushRemoteRepo('master')
+      }
     }
   }
   
@@ -137,7 +137,9 @@ pnpm-debug.log*
   // 自动提交代码
   async commit () {
     // 获取正确的版本号
-    const version = await this.getCorrectVersion()
+    await this.getCorrectVersion()
+    // stash检查
+    await this.checkStash()
   }
   // 获取版本号
   async getCorrectVersion () {
@@ -204,6 +206,15 @@ pnpm-debug.log*
       }
       return 1
     })
+  }
+  // 检查stach区
+  async checkStash () {
+    log.info('stash区检查')
+    const stashList =await this.git.stashList()
+    if (stashList?.all?.length > 0) {
+      await this.git.stash(['pop'])
+    }
+    log.success('stash区pop完成')
   }
 }
 
