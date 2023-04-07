@@ -16,17 +16,21 @@ class commitCommand extends Command {
   }
   get options () { 
     return [
-      ['-c,--clear','清空缓存',false]
+      ['-c,--clear','清空缓存',false],
+      ['-p,--publish','发布代码',false],
     ]
   }
 
-  async action ([{ clear }]) {
+  async action ([{ clear,publish }]) {
     if (clear) {
       await clearCache()
     }
     await this.createRemoteRepo()
     await this.initLocalGit()
     await this.commit()
+    if (publish) {
+      await this.publish()
+    }
   }
   // 步骤一：创建远程仓库
   async createRemoteRepo () {
@@ -98,7 +102,51 @@ pnpm-debug.log*
       }
     }
   }
-  
+  //步骤三 自动提交代码
+  async commit () {
+    // 获取正确的版本号
+    await this.getCorrectVersion()
+    // stash检查
+    await this.checkStash()
+    // 冲突检查
+    await this.checkConflict()
+    // 自动提交未提交代码
+    await this.checkNotCommit()
+    // 开发分支自动切换
+    await this.checkoutBranch()
+    // 合并远程分支
+    await this.pullRemoteMasterAndBranch()
+    // 推送分支到远程
+    await this.pushRemoteRepo(this.branch)
+  }
+  // 步骤四 发布代码
+  async publish () {
+    await this.checkTag()
+  }
+
+  // 检查tag
+  async checkTag () {
+    log.info('获取远程tag列表')
+    const tag = `release/${this.version}`
+    // 远程tag
+    const tagsRemote =await this.getBranchList('release')
+    if (tagsRemote.includes(this.version)) {
+      log.info('远程tag已存在', tag)
+      await this.git.push(['origin', `:refs/tags/${tag}`])
+      log.success('远程tag已删除',tag)
+    }
+    // 本地tag
+    const tagsLocal = this.git.tags()
+    if ((await tagsLocal).all.includes(tag)) {
+      log.info('本地tag已存在', tag)
+      await this.git.tag(['-d', tag])
+      log.success('本地tag已删除',tag)
+    }
+    await this.git.addTag(tag)
+    log.success('本地tag创建成功', tag)
+    await this.git.pushTags('origin')
+    log.success('远程tag推送成功', tag)
+  }
   async checkNotCommit () {
     const status = await this.git.status()
     if (status.not_added.length > 0 ||
@@ -128,23 +176,6 @@ pnpm-debug.log*
     log.info(`推送代码至远程${branchName}分支`)
     await this.git.push('origin',branchName)
     log.success(`推送代码至远程${branchName}分支成功`)
-  }
-  // 自动提交代码
-  async commit () {
-    // 获取正确的版本号
-    await this.getCorrectVersion()
-    // stash检查
-    await this.checkStash()
-    // 冲突检查
-    await this.checkConflict()
-    // 自动提交未提交代码
-    await this.checkNotCommit()
-    // 开发分支自动切换
-    await this.checkoutBranch()
-    // 合并远程分支
-    await this.pullRemoteMasterAndBranch()
-    // 推送分支到远程
-    await this.pushRemoteRepo(this.branch)
   }
   // 获取版本号
   async getCorrectVersion () {
