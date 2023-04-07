@@ -143,6 +143,8 @@ pnpm-debug.log*
     await this.checkoutBranch()
     // 合并远程分支
     await this.pullRemoteMasterAndBranch()
+    // 推送分支到远程
+    await this.pushRemoteRepo(this.branch)
   }
   // 获取版本号
   async getCorrectVersion () {
@@ -255,7 +257,7 @@ pnpm-debug.log*
   }
   async pullRemoteRepo (branch) {
     // 拉去远程分支
-    await this.git.pull('origin', 'master').catch(err => {
+    await this.git.pull('origin', branch).catch(err => {
       if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
         log.warn('拉去远程[master]分支失败')
       }
