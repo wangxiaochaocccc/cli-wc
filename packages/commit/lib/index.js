@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import fse from 'fs-extra'
 import path from 'node:path'
 import simpleGit from 'simple-git'
+import semver from 'semver'
 import Command from '@learnmyself.com/command'
 import { log,clearCache,initGitPlatform,initGitType, createRepo, makeInput } from '@learnmyself.com/utils'
 
@@ -25,6 +26,7 @@ class commitCommand extends Command {
     }
     await this.createRemoteRepo()
     await this.initLocalGit()
+    await this.commit()
   }
   // 步骤一：创建远程仓库
   async createRemoteRepo () {
@@ -130,6 +132,40 @@ pnpm-debug.log*
     log.info(`推送代码至远程${branchName}分支`)
     await this.git.push('origin',branchName)
     log.success(`推送代码至远程${branchName}分支成功`)
+  }
+  // 自动提交代码
+  async commit () {
+    // 获取正确的版本号
+    const version = await this.getCorrectVersion()
+  }
+  // 获取版本号
+  async getCorrectVersion () {
+    log.info('获取版本号')
+    const listBranch = await this.getBranchList('release')
+    console.log(listBranch,111);
+  }
+  // 获取分支列表
+  async getBranchList (type) {
+    const listRemotes = await this.git.listRemote(['--refs'])
+    let reg
+    if (type === 'release') {
+      reg=/.+?refs\/tags\/release\/(\d+\.\d+\.\d+)/g
+    } else {
+      reg=/.+?refs\/tags\/dev\/(\d+\.\d+\.\d+)/g
+    }
+    return listRemotes.split('\n').map(remote => {
+      const match = reg.exec(remote)
+      reg.lastIndex = 0
+      if (match && semver.valid(match[1])) {
+        return match[1]
+      }
+    }).filter(_ => _).sort((a, b) => {
+      if (semver.lte(b, a)) {
+        if (a === b) return 0
+        return -1
+      }
+      return 1
+    })
   }
 }
 
