@@ -241,7 +241,17 @@ pnpm-debug.log*
   async pullRemoteMasterAndBranch () {
     log.info(`合并远程master分支->${this.branch}`)
     await this.pullRemoteRepo('master')
-    log.info('合并远程master分支成功')
+    log.success('合并远程master分支成功')
+    log.info('检查远程分支')
+    const remoteBranchList = await this.getBranchList()
+    if (remoteBranchList.indexOf(this.version) > -1) {
+      log.info(`合并${this.branch}->${this.branch}`)
+      await this.pullRemoteRepo(this.branch)
+      log.success(`合并远程分支${this.branch}成功`)
+      await this.checkConflict()
+    } else {
+      log.success(`不存在${this.branch}远程分支`)
+    }
   }
   async pullRemoteRepo (branch) {
     // 拉去远程分支
