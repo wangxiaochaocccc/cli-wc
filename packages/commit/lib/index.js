@@ -92,12 +92,7 @@ pnpm-debug.log*
       // 检查对应远程分支是否存在
       const tags = await this.git.listRemote(['--refs']);
       if (tags.indexOf('refs/heads/master') >= 0) {
-        // 拉去远程分支
-        await this.git.pull('origin', 'master').catch(err => {
-          if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
-            log.warn('拉去远程[master]分支失败')
-          }
-        })
+        await this.pullRemoteRepo('master')
       } else {
         await this.pushRemoteRepo('master')
       }
@@ -146,6 +141,8 @@ pnpm-debug.log*
     await this.checkNotCommit()
     // 开发分支自动切换
     await this.checkoutBranch()
+    // 合并远程分支
+    await this.pullRemoteMasterAndBranch()
   }
   // 获取版本号
   async getCorrectVersion () {
@@ -239,6 +236,21 @@ pnpm-debug.log*
     } else {
       await this.git.checkoutLocalBranch(this.branch)
     }
+  }
+  // 合并远程分支
+  async pullRemoteMasterAndBranch () {
+    log.info(`合并远程master分支->${this.branch}`)
+    await this.pullRemoteRepo('master')
+    log.info('合并远程master分支成功')
+  }
+  async pullRemoteRepo (branch) {
+    // 拉去远程分支
+    await this.git.pull('origin', 'master').catch(err => {
+      if (err.message.indexOf('Couldn\'t find remote ref master') > -1) {
+        log.warn('拉去远程[master]分支失败')
+      }
+      process.exit(0)
+    })
   }
 }
 
