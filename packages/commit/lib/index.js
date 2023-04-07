@@ -4,7 +4,7 @@ import path from 'node:path'
 import simpleGit from 'simple-git'
 import semver from 'semver'
 import Command from '@learnmyself.com/command'
-import { log,clearCache,initGitPlatform,initGitType, createRepo, makeInput } from '@learnmyself.com/utils'
+import { log,clearCache,initGitPlatform,initGitType, createRepo, makeInput, makeList } from '@learnmyself.com/utils'
 
 
 class commitCommand extends Command {
@@ -41,6 +41,7 @@ class commitCommand extends Command {
     const pkgPath = path.resolve(cwd, 'package.json')
     const pkg = fse.readJSONSync(pkgPath)
     this.name = pkg.name
+    this.version = pkg.version
     await createRepo(this.gitResult.githubApi, this.name)
     // 创建gitingore
     const gitIngorePath = path.resolve(cwd, '.gitignore')
@@ -140,9 +141,46 @@ pnpm-debug.log*
   }
   // 获取版本号
   async getCorrectVersion () {
-    log.info('获取版本号')
+    log.info('获取代码分支')
     const listBranch = await this.getBranchList('release')
-    console.log(listBranch,111);
+    let releaseVersion
+    if (listBranch?.length > 0) {
+      releaseVersion = listBranch[0]
+    }
+    const devVersion = this.version
+    if (!releaseVersion) {
+      this.branch = `dev/${devVersion}`
+    } else if (semver.gte(devVersion,releaseVersion)) { 
+      log.info(`当前版本号大于线上版本号，${devVersion} >= ${releaseVersion}`)
+      this.branch = `dev/${devVersion}`
+    } else {
+      log.info(`当前版本号小于向上版本号，${devVersion} < ${releaseVersion}`)
+      const incType = await makeList({
+        message: '自动升级版本，请选择升级版本类型：',
+        choices: [
+          {name:`小版本（${releaseVersion} ->${semver.inc(releaseVersion,'patch')}）`,value:'patch'},
+          {name:`中版本（${releaseVersion} ->${semver.inc(releaseVersion,'minor')}）`,value:'minor'},
+          {name:`大版本（${releaseVersion} ->${semver.inc(releaseVersion,'major')}）`,value:'major'},
+        ]
+      })
+      const incVersion = semver.inc(releaseVersion, incType)
+      this.branch = `dev/${incVersion}`
+      this.version = incVersion
+      this.changeVersionPkg()
+      log.verbose('incType',incType)
+    }
+    log.info('获取代码分支获取成功')
+  }
+  // 更改package.json版本
+  changeVersionPkg () {
+    // 获取pkg.name
+    const cwd = process.cwd()
+    const pkgPath = path.resolve(cwd, 'package.json')
+    const pkg = fse.readJSONSync(pkgPath)
+    if (pkg?.version !== this.version) {
+      pkg.version = this.version
+      fse.writeJSONSync(pkgPath,pkg,{spaces:2})
+    }
   }
   // 获取分支列表
   async getBranchList (type) {
