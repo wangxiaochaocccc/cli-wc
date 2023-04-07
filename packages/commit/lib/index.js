@@ -113,7 +113,7 @@ pnpm-debug.log*
     // 自动提交未提交代码
     await this.checkNotCommit()
     // 开发分支自动切换
-    await this.checkoutBranch()
+    await this.checkoutBranch(this.branch)
     // 合并远程分支
     await this.pullRemoteMasterAndBranch()
     // 推送分支到远程
@@ -122,8 +122,15 @@ pnpm-debug.log*
   // 步骤四 发布代码
   async publish () {
     await this.checkTag()
+    await this.checkoutBranch('master')
+    await this.mergeBranchToMaster()
   }
-
+  // merge分支到master
+  async mergeBranchToMaster () {
+    log.info(`开始合并分支，${this.branch} => master`)
+    await this.git.mergeFromTo(this.branch, 'master')
+    log.success(`成功合并分支，${this.branch} => master`)
+  }
   // 检查tag
   async checkTag () {
     log.info('获取远程tag列表')
@@ -262,13 +269,14 @@ pnpm-debug.log*
     log.success('代码冲突检查成功')
   }
   // 开发分支自动切换
-  async checkoutBranch () {
+  async checkoutBranch (branch) {
     const localBranch = await this.git.branchLocal()
-    if (localBranch.all.indexOf(this.branch) > -1) {
-      await this.git.checkout(this.branch)
+    if (localBranch.all.indexOf(branch) > -1) {
+      await this.git.checkout(branch)
     } else {
-      await this.git.checkoutLocalBranch(this.branch)
+      await this.git.checkoutLocalBranch(branch)
     }
+    log.success(`成功切换到${branch}分支`)
   }
   // 合并远程分支
   async pullRemoteMasterAndBranch () {
