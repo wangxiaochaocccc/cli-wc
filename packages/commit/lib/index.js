@@ -124,6 +124,21 @@ pnpm-debug.log*
     await this.checkTag()
     await this.checkoutBranch('master')
     await this.mergeBranchToMaster()
+    await this.pushRemoteRepo('master')
+    await this.deleteLocalBranch(this.branch)
+    await this.deleteRemoteBranch(this.branch)
+  }
+  // 删除本地分支
+  async deleteLocalBranch (branch) {
+    log.info('开始删除本地分支', branch)
+    await this.git.deleteLocalBranch(branch)
+    log.success("删除本地分支成功",branch)
+  }
+  // 删除远程分支
+  async deleteRemoteBranch (branch) {
+    log.info('开始删除远程分支', branch)
+    await this.git.push(['origin','--delete',branch])
+    log.success("删除远程分支成功",branch)
   }
   // merge分支到master
   async mergeBranchToMaster () {
