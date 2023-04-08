@@ -229,7 +229,7 @@ pnpm-debug.log*
       this.changeVersionPkg()
       log.verbose('incType',incType)
     }
-    log.info('获取代码分支获取成功')
+    log.info('代码分支获取成功')
   }
   // 更改package.json版本
   changeVersionPkg () {
