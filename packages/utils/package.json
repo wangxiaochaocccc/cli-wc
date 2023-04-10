@@ -1,6 +1,6 @@
 {
   "name": "@learnmyself.com/utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "wc-cli utils",
   "author": "wangchao <wangxiaochaocccc@163.com>",
   "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
@@ -27,7 +27,7 @@
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
   },
   "dependencies": {
-    "@learnmyself.com/command": "^0.0.3",
+    "@learnmyself.com/command": "^0.0.4",
     "axios": "^1.3.4",
     "chalk": "^5.2.0",
     "execa": "^7.1.1",

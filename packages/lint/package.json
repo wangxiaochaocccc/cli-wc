@@ -1,6 +1,6 @@
 {
   "name": "@learnmyself.com/lint",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "> TODO: description",
   "author": "wangchao <wangxiaochaocccc@163.com>",
   "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
@@ -25,8 +25,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@learnmyself.com/command": "^0.0.3",
-    "@learnmyself.com/utils": "^0.0.3",
+    "@learnmyself.com/command": "^0.0.4",
+    "@learnmyself.com/utils": "^0.0.4",
     "eslint": "^8.37.0",
     "jest": "^29.5.0",
     "mocha": "^10.2.0"
