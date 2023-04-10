@@ -1,6 +1,6 @@
 {
   "name": "@learnmyself.com/command",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "common command Init",
   "author": "wangchao <wangxiaochaocccc@163.com>",
   "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
@@ -26,5 +26,5 @@
   "bugs": {
     "url": "https://github.com/wangxiaochaocccc/cli-wc/issues"
   },
-  "type":"module"
+  "type": "module"
 }

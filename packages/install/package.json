@@ -1,6 +1,6 @@
 {
   "name": "@learnmyself.com/install",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "> TODO: description",
   "author": "wangchao <wangxiaochaocccc@163.com>",
   "homepage": "https://github.com/wangxiaochaocccc/cli-wc#readme",
@@ -25,8 +25,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@learnmyself.com/command": "^0.0.0",
-    "@learnmyself.com/utils": "^0.0.0",
+    "@learnmyself.com/command": "^0.0.1",
+    "@learnmyself.com/utils": "^0.0.1",
     "ora": "^6.3.0"
   }
 }
