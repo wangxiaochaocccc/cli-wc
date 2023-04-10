@@ -1,7 +1,7 @@
 import path from 'node:path'
 import {execa} from 'execa'
 
-const Cli = path.join(__dirname,'../bin/cli.js')
+const Cli = path.join(__dirname,'../bin/cli.mjs')
 const bin=()=>(...arg)=>execa(Cli,arg)
 
 // 错误的命令
