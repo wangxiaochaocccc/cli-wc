@@ -13,6 +13,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wangxiaochaocccc/cli-wc.git"
@@ -31,5 +34,5 @@
     "semver": "^7.3.8",
     "simple-git": "3.15.1"
   },
-  "gitHead": "c3d39edd1f635a939f71269eff0d551609614418"
+  "gitHead": "08dce4e8fa04620e546de400655c1e48108f10dd"
 }

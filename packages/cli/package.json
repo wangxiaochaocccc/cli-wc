@@ -18,7 +18,7 @@
     "bin"
   ],
   "publishConfig": {
-    "registry": "https://registry.npm.taobao.org/"
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -48,5 +48,5 @@
     "execa": "^7.1.1",
     "jest": "^29.5.0"
   },
-  "gitHead": "c3d39edd1f635a939f71269eff0d551609614418"
+  "gitHead": "08dce4e8fa04620e546de400655c1e48108f10dd"
 }

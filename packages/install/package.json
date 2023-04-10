@@ -29,5 +29,8 @@
     "@learnmyself.com/utils": "^1.0.1",
     "ora": "^6.3.0"
   },
-  "gitHead": "c3d39edd1f635a939f71269eff0d551609614418"
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "08dce4e8fa04620e546de400655c1e48108f10dd"
 }
