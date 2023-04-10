@@ -38,5 +38,6 @@
     "semver": "^7.3.8",
     "url-join": "^5.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "gitHead": "96352db3176ea7d402f47d092d94eb850c7d77d3"
 }
