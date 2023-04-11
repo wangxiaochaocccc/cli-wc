@@ -210,7 +210,7 @@ pnpm-debug.log*
     const devVersion = this.version
     if (!releaseVersion) {
       this.branch = `dev/${devVersion}`
-    } else if (semver.gt(devVersion,releaseVersion)) { 
+    } else if (semver.gte(devVersion,releaseVersion)) { 
       log.info(`当前版本号大于线上版本号，${devVersion} > ${releaseVersion}`)
       this.branch = `dev/${devVersion}`
     } else {
